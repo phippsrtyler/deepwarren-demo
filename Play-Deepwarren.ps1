@@ -5,7 +5,14 @@ function Checked([string]$Program, [string[]]$Arguments) {
     if ($LASTEXITCODE -ne 0) { throw "Command failed: $Program (exit $LASTEXITCODE)" }
 }
 try {
-    if (!(Test-Path -LiteralPath $Apk)) { throw 'Put Deepwarren.apk beside this launcher, then run it again.' }
+    $releaseBase = 'https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download'
+    $release = Invoke-RestMethod "$releaseBase/release.json"
+    if ($release.apkSha256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid release checksum.' }
+    if (!(Test-Path -LiteralPath $Apk) -or (Get-FileHash -LiteralPath $Apk -Algorithm SHA256).Hash -ne $release.apkSha256) {
+        Invoke-WebRequest -UseBasicParsing "$releaseBase/Deepwarren.apk" -OutFile "$Apk.part"
+        if ((Get-FileHash -LiteralPath "$Apk.part" -Algorithm SHA256).Hash -ne $release.apkSha256) { throw 'Game download checksum mismatch.' }
+        Move-Item -LiteralPath "$Apk.part" -Destination $Apk -Force
+    }
     $studioJava = Join-Path $env:ProgramFiles 'Android\Android Studio\jbr'
     if (!(Test-Path -LiteralPath "$studioJava\bin\java.exe")) {
         Start-Process 'https://developer.android.com/studio'
@@ -28,9 +35,12 @@ try {
         New-Item -ItemType Directory -Force -Path "$sdk\cmdline-tools\latest" | Out-Null
         Copy-Item -Path "$unpack\cmdline-tools\*" -Destination "$sdk\cmdline-tools\latest" -Recurse -Force
     }
-    Checked $manager @("--sdk_root=$sdk", '--licenses')
     $image = 'system-images;android-35;google_apis;x86_64'
-    Checked $manager @("--sdk_root=$sdk", 'platform-tools', 'emulator', $image)
+    if (!(Test-Path -LiteralPath "$sdk\system-images\android-35\google_apis\x86_64\package.xml") -or
+        !(Test-Path -LiteralPath "$sdk\emulator\emulator.exe") -or !(Test-Path -LiteralPath "$sdk\platform-tools\adb.exe")) {
+        Checked $manager @("--sdk_root=$sdk", '--licenses')
+        Checked $manager @("--sdk_root=$sdk", 'platform-tools', 'emulator', $image)
+    }
     $avd = Join-Path $env:ANDROID_AVD_HOME 'Deepwarren.avd'
     if (!(Test-Path -LiteralPath "$avd\config.ini")) {
         'no' | & "$sdk\cmdline-tools\latest\bin\avdmanager.bat" create avd --name Deepwarren --package $image --device pixel
