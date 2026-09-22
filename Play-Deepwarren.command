@@ -2,7 +2,15 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 apk="$PWD/Deepwarren.apk"
-[[ -f "$apk" ]] || { echo 'Put Deepwarren.apk beside this launcher.'; exit 1; }
+release_base='https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download'
+curl --fail --location --proto '=https' --tlsv1.2 "$release_base/Deepwarren.apk.sha256" -o "$PWD/Deepwarren.apk.sha256"
+apk_checksum="$(cut -d ' ' -f 1 < "$PWD/Deepwarren.apk.sha256" | tr -d '\r\n')"
+[[ "$apk_checksum" =~ ^[a-f0-9]{64}$ ]] || { echo 'Invalid release checksum'; exit 1; }
+if [[ ! -f "$apk" ]] || [[ "$(shasum -a 256 "$apk" | cut -d ' ' -f 1)" != "$apk_checksum" ]]; then
+  curl --fail --location --proto '=https' --tlsv1.2 "$release_base/Deepwarren.apk" -o "$apk.part"
+  [[ "$(shasum -a 256 "$apk.part" | cut -d ' ' -f 1)" == "$apk_checksum" ]] || { echo 'Game checksum mismatch'; exit 1; }
+  mv -f "$apk.part" "$apk"
+fi
 studio_java='/Applications/Android Studio.app/Contents/jbr/Contents/Home'
 if [[ ! -x "$studio_java/bin/java" ]]; then
   open 'https://developer.android.com/studio'
@@ -31,9 +39,11 @@ if [[ ! -x "$manager" ]]; then
   unzip -oq "$archive" -d "$game_root/google-tools"
   cp -R "$game_root/google-tools/cmdline-tools/." "$sdk/cmdline-tools/latest/"
 fi
-"$manager" "--sdk_root=$sdk" --licenses
 image="system-images;android-35;google_apis;$arch"
-"$manager" "--sdk_root=$sdk" platform-tools emulator "$image"
+if [[ ! -f "$sdk/system-images/android-35/google_apis/$arch/package.xml" || ! -x "$sdk/emulator/emulator" || ! -x "$sdk/platform-tools/adb" ]]; then
+  "$manager" "--sdk_root=$sdk" --licenses
+  "$manager" "--sdk_root=$sdk" platform-tools emulator "$image"
+fi
 avd="$ANDROID_AVD_HOME/Deepwarren.avd"
 if [[ ! -f "$avd/config.ini" ]]; then
   printf 'no\n' | "$sdk/cmdline-tools/latest/bin/avdmanager" create avd --name Deepwarren --package "$image" --device pixel
