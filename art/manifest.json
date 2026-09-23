@@ -1,0 +1,573 @@
+{
+  "source": "kotlin/assets",
+  "creatures": [
+    {
+      "name": "Mycelid",
+      "slug": "mycelid",
+      "sheets": [
+        {
+          "view": "overworld",
+          "file": "overworld.png",
+          "cellPx": 96,
+          "rows": 32
+        },
+        {
+          "view": "battle",
+          "file": "battle.png",
+          "cellPx": 256,
+          "rows": 4
+        }
+      ],
+      "animations": [
+        {
+          "anim": "idle",
+          "dir": "e",
+          "frames": 4,
+          "fps": 8.5714,
+          "file": "art/creatures/mycelid-idle.png",
+          "cellPx": 96
+        },
+        {
+          "anim": "walk",
+          "dir": "e",
+          "frames": 6,
+          "fps": 10,
+          "file": "art/creatures/mycelid-walk.png",
+          "cellPx": 96
+        }
+      ],
+      "portraits": [
+        {
+          "file": "art/creatures/mycelid-portrait.png",
+          "cellPx": 96
+        },
+        {
+          "file": "art/creatures/mycelid-battle.png",
+          "cellPx": 256,
+          "anim": "idle",
+          "dir": "side"
+        }
+      ]
+    },
+    {
+      "name": "The Dusk-Eyed Wolf",
+      "slug": "old-wolf",
+      "sheets": [
+        {
+          "view": "overworld",
+          "file": "overworld.png",
+          "cellPx": 128,
+          "rows": 32
+        },
+        {
+          "view": "battle",
+          "file": "battle.png",
+          "cellPx": 320,
+          "rows": 4
+        }
+      ],
+      "animations": [
+        {
+          "anim": "idle",
+          "dir": "e",
+          "frames": 4,
+          "fps": 6,
+          "file": "art/creatures/old-wolf-idle.png",
+          "cellPx": 128
+        },
+        {
+          "anim": "walk",
+          "dir": "e",
+          "frames": 6,
+          "fps": 10,
+          "file": "art/creatures/old-wolf-walk.png",
+          "cellPx": 128
+        }
+      ],
+      "portraits": [
+        {
+          "file": "art/creatures/old-wolf-portrait.png",
+          "cellPx": 128
+        },
+        {
+          "file": "art/creatures/old-wolf-battle.png",
+          "cellPx": 320,
+          "anim": "idle",
+          "dir": "side"
+        }
+      ]
+    },
+    {
+      "name": "Cave Spider",
+      "slug": "cave-spider",
+      "sheets": [
+        {
+          "view": "overworld",
+          "file": "overworld.png",
+          "cellPx": 80,
+          "rows": 32
+        },
+        {
+          "view": "battle",
+          "file": "battle.png",
+          "cellPx": 256,
+          "rows": 4
+        }
+      ],
+      "animations": [
+        {
+          "anim": "idle",
+          "dir": "e",
+          "frames": 4,
+          "fps": 6,
+          "file": "art/creatures/cave-spider-idle.png",
+          "cellPx": 80
+        },
+        {
+          "anim": "walk",
+          "dir": "e",
+          "frames": 6,
+          "fps": 10,
+          "file": "art/creatures/cave-spider-walk.png",
+          "cellPx": 80
+        }
+      ],
+      "portraits": [
+        {
+          "file": "art/creatures/cave-spider-portrait.png",
+          "cellPx": 80
+        },
+        {
+          "file": "art/creatures/cave-spider-battle.png",
+          "cellPx": 256,
+          "anim": "idle",
+          "dir": "side"
+        }
+      ]
+    },
+    {
+      "name": "Duskmoth",
+      "slug": "duskmoth",
+      "sheets": [
+        {
+          "view": "overworld",
+          "file": "overworld.png",
+          "cellPx": 96,
+          "rows": 16
+        }
+      ],
+      "animations": [
+        {
+          "anim": "idle",
+          "dir": "e",
+          "frames": 4,
+          "fps": 6,
+          "file": "art/creatures/duskmoth-idle.png",
+          "cellPx": 96
+        },
+        {
+          "anim": "walk",
+          "dir": "e",
+          "frames": 6,
+          "fps": 10,
+          "file": "art/creatures/duskmoth-walk.png",
+          "cellPx": 96
+        }
+      ],
+      "portraits": [
+        {
+          "file": "art/creatures/duskmoth-portrait.png",
+          "cellPx": 96
+        }
+      ]
+    }
+  ],
+  "scenery": [
+    {
+      "id": "hollow_floor",
+      "group": "ground",
+      "role": "tileable ground material",
+      "file": "art/ground/hollow_floor.jpg",
+      "width": 480,
+      "height": 480
+    },
+    {
+      "id": "damp_mycelium",
+      "group": "ground",
+      "role": "tileable ground material",
+      "file": "art/ground/damp_mycelium.jpg",
+      "width": 480,
+      "height": 480
+    },
+    {
+      "id": "spore_haze",
+      "group": "scenery",
+      "role": "haze overlay",
+      "file": "art/scenery/spore_haze.png",
+      "width": 384,
+      "height": 144
+    },
+    {
+      "id": "blight_sunken",
+      "group": "scenery",
+      "role": "world scenery",
+      "file": "art/scenery/blight_sunken.png",
+      "width": 120,
+      "height": 120
+    },
+    {
+      "id": "blight_litter",
+      "group": "scenery",
+      "role": "world scenery",
+      "file": "art/scenery/blight_litter.png",
+      "width": 120,
+      "height": 120
+    },
+    {
+      "id": "canopy_edge",
+      "group": "scenery",
+      "role": "world scenery",
+      "file": "art/scenery/canopy_edge.png",
+      "width": 158,
+      "height": 92
+    },
+    {
+      "id": "stalk_field",
+      "group": "scenery",
+      "role": "world scenery",
+      "file": "art/scenery/stalk_field.png",
+      "width": 182,
+      "height": 126
+    },
+    {
+      "id": "cap_hut",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/cap_hut.png",
+      "width": 128,
+      "height": 112
+    },
+    {
+      "id": "fallen_root",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/fallen_root.png",
+      "width": 188,
+      "height": 96
+    },
+    {
+      "id": "fan_shelf_colony",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/fan_shelf_colony.png",
+      "width": 236,
+      "height": 183
+    },
+    {
+      "id": "forked_gill_stand",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/forked_gill_stand.png",
+      "width": 192,
+      "height": 236
+    },
+    {
+      "id": "fungus_cluster",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/fungus_cluster.png",
+      "width": 59,
+      "height": 51
+    },
+    {
+      "id": "ore_spine",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/ore_spine.png",
+      "width": 254,
+      "height": 218
+    },
+    {
+      "id": "root_bank",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/root_bank.png",
+      "width": 187,
+      "height": 77
+    },
+    {
+      "id": "root_braid",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/root_braid.png",
+      "width": 252,
+      "height": 118
+    },
+    {
+      "id": "rotted_stump",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/rotted_stump.png",
+      "width": 188,
+      "height": 108
+    },
+    {
+      "id": "shelf_colony",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/shelf_colony.png",
+      "width": 188,
+      "height": 125
+    },
+    {
+      "id": "shelf_grove",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/shelf_grove.png",
+      "width": 217,
+      "height": 229
+    },
+    {
+      "id": "split_crown",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/split_crown.png",
+      "width": 244,
+      "height": 254
+    },
+    {
+      "id": "stalk_arch",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/stalk_arch.png",
+      "width": 256,
+      "height": 202
+    },
+    {
+      "id": "sunken_ring",
+      "group": "scenery",
+      "role": "placed world prop",
+      "file": "art/scenery/sunken_ring.png",
+      "width": 256,
+      "height": 145
+    }
+  ],
+  "files": [
+    {
+      "file": "art/creatures/mycelid-idle.png",
+      "bytes": 1412,
+      "width": 384,
+      "height": 96
+    },
+    {
+      "file": "art/creatures/mycelid-portrait.png",
+      "bytes": 509,
+      "width": 41,
+      "height": 63
+    },
+    {
+      "file": "art/creatures/mycelid-walk.png",
+      "bytes": 1699,
+      "width": 576,
+      "height": 96
+    },
+    {
+      "file": "art/creatures/mycelid-battle.png",
+      "bytes": 4320,
+      "width": 169,
+      "height": 257
+    },
+    {
+      "file": "art/creatures/old-wolf-idle.png",
+      "bytes": 2699,
+      "width": 512,
+      "height": 128
+    },
+    {
+      "file": "art/creatures/old-wolf-portrait.png",
+      "bytes": 1161,
+      "width": 108,
+      "height": 62
+    },
+    {
+      "file": "art/creatures/old-wolf-walk.png",
+      "bytes": 2861,
+      "width": 768,
+      "height": 128
+    },
+    {
+      "file": "art/creatures/old-wolf-battle.png",
+      "bytes": 8629,
+      "width": 232,
+      "height": 250
+    },
+    {
+      "file": "art/creatures/cave-spider-idle.png",
+      "bytes": 2219,
+      "width": 320,
+      "height": 80
+    },
+    {
+      "file": "art/creatures/cave-spider-portrait.png",
+      "bytes": 899,
+      "width": 60,
+      "height": 62
+    },
+    {
+      "file": "art/creatures/cave-spider-walk.png",
+      "bytes": 2592,
+      "width": 480,
+      "height": 80
+    },
+    {
+      "file": "art/creatures/cave-spider-battle.png",
+      "bytes": 5883,
+      "width": 246,
+      "height": 164
+    },
+    {
+      "file": "art/creatures/duskmoth-idle.png",
+      "bytes": 888,
+      "width": 384,
+      "height": 96
+    },
+    {
+      "file": "art/creatures/duskmoth-portrait.png",
+      "bytes": 503,
+      "width": 61,
+      "height": 42
+    },
+    {
+      "file": "art/creatures/duskmoth-walk.png",
+      "bytes": 1356,
+      "width": 576,
+      "height": 96
+    },
+    {
+      "file": "art/ground/hollow_floor.jpg",
+      "bytes": 22044,
+      "width": 480,
+      "height": 480
+    },
+    {
+      "file": "art/ground/damp_mycelium.jpg",
+      "bytes": 46978,
+      "width": 480,
+      "height": 480
+    },
+    {
+      "file": "art/scenery/spore_haze.png",
+      "bytes": 6974,
+      "width": 384,
+      "height": 144
+    },
+    {
+      "file": "art/scenery/blight_sunken.png",
+      "bytes": 2115,
+      "width": 120,
+      "height": 120
+    },
+    {
+      "file": "art/scenery/blight_litter.png",
+      "bytes": 2716,
+      "width": 120,
+      "height": 120
+    },
+    {
+      "file": "art/scenery/canopy_edge.png",
+      "bytes": 3693,
+      "width": 158,
+      "height": 92
+    },
+    {
+      "file": "art/scenery/stalk_field.png",
+      "bytes": 4408,
+      "width": 182,
+      "height": 126
+    },
+    {
+      "file": "art/scenery/cap_hut.png",
+      "bytes": 3043,
+      "width": 128,
+      "height": 112
+    },
+    {
+      "file": "art/scenery/fallen_root.png",
+      "bytes": 5223,
+      "width": 188,
+      "height": 96
+    },
+    {
+      "file": "art/scenery/fan_shelf_colony.png",
+      "bytes": 8603,
+      "width": 236,
+      "height": 183
+    },
+    {
+      "file": "art/scenery/forked_gill_stand.png",
+      "bytes": 8902,
+      "width": 192,
+      "height": 236
+    },
+    {
+      "file": "art/scenery/fungus_cluster.png",
+      "bytes": 689,
+      "width": 59,
+      "height": 51
+    },
+    {
+      "file": "art/scenery/ore_spine.png",
+      "bytes": 15408,
+      "width": 254,
+      "height": 218
+    },
+    {
+      "file": "art/scenery/root_bank.png",
+      "bytes": 5084,
+      "width": 187,
+      "height": 77
+    },
+    {
+      "file": "art/scenery/root_braid.png",
+      "bytes": 7401,
+      "width": 252,
+      "height": 118
+    },
+    {
+      "file": "art/scenery/rotted_stump.png",
+      "bytes": 5764,
+      "width": 188,
+      "height": 108
+    },
+    {
+      "file": "art/scenery/shelf_colony.png",
+      "bytes": 7634,
+      "width": 188,
+      "height": 125
+    },
+    {
+      "file": "art/scenery/shelf_grove.png",
+      "bytes": 12570,
+      "width": 217,
+      "height": 229
+    },
+    {
+      "file": "art/scenery/split_crown.png",
+      "bytes": 17836,
+      "width": 244,
+      "height": 254
+    },
+    {
+      "file": "art/scenery/stalk_arch.png",
+      "bytes": 14854,
+      "width": 256,
+      "height": 202
+    },
+    {
+      "file": "art/scenery/sunken_ring.png",
+      "bytes": 15396,
+      "width": 256,
+      "height": 145
+    }
+  ]
+}

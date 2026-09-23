@@ -10,6 +10,10 @@ Current build: **0.4.0-public-demo (versionCode 10)**. Verify your download agai
 `Deepwarren.apk.sha256`, published with each release.
 The host runs on the developer's PC and must be online; this is an early demo, not a continuously available service.
 
+[See the demo page](https://phippsrtyler.github.io/deepwarren-demo/) — creature sprites animated
+from the game's own art, the world at a glance, and a plain statement of what the demo does and does
+not yet prove.
+
 ## Android / Thor
 
 Download the APK from Releases and open it on your device. Android may ask you to allow this
@@ -53,5 +57,7 @@ launcher updates the existing app without clearing its storage.
 ## Support
 
 Report the version, device/emulator, what you expected, and what happened using this repository's
-Issues page. Do not post credentials or private save files. This repository distributes the demo;
-it does not contain or license the game's private source code or production assets.
+Issues page. Do not post credentials or private save files. This repository distributes the demo; it
+does not contain the game's private source code. The art under `art/` is exported from the game's own
+asset files so the demo page can show what the download contains; it remains the owner's property and
+is not licensed for reuse or redistribution.
