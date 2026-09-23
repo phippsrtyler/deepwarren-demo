@@ -67,6 +67,7 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
 }
 .anim img{
   height:100%;width:auto;display:block;
+  max-width:none;
   image-rendering:pixelated;
   animation:deepwarren-scroll var(--dur,0.8s) steps(var(--n)) infinite;
 }
@@ -153,6 +154,9 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
 .card p{margin:.4rem 0 0;color:var(--ink-soft);font-size:.95rem}
 .card .kicker{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:700}
 
+.beasts{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
+@media (max-width:900px){.beasts{grid-template-columns:1fr}}
+
 /* ---------- creature cards ---------- */
 .beast{
   display:flex;flex-direction:column;
@@ -162,7 +166,7 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
 }
 .beast-stage{
   position:relative;display:flex;align-items:flex-end;justify-content:center;
-  min-height:212px;padding:1rem .75rem 0;
+  min-height:284px;padding:1rem .75rem 0;
   background:
     radial-gradient(78% 62% at 50% 88%,rgba(183,215,189,.14),transparent 70%),
     linear-gradient(180deg,#0d1615,#0a1110);
@@ -292,25 +296,25 @@ footer a{color:var(--ink-soft)}
     <div class="cast" role="img" aria-label="Game sprites of the Mycelid, the Dusk-Eyed Wolf, a Cave Spider and the companion cat Duskmoth, animated from the game's own sprite sheets.">
       <figure>
         <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
-          <img src="art/creatures/mycelid-idle.png" alt="The Mycelid — the playable fungal folk" width="768" height="192" class="pixelated">
+          <img src="art/creatures/mycelid-idle.png" alt="The Mycelid — the playable fungal folk" width="384" height="96" class="pixelated">
         </div>
         <figcaption>Mycelid</figcaption>
       </figure>
       <figure>
         <div class="anim" style="--cell:128px;--n:6;--scale:2;--dur:.6s">
-          <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf" width="1536" height="256" class="pixelated">
+          <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf" width="768" height="128" class="pixelated">
         </div>
         <figcaption>Dusk-Eyed Wolf</figcaption>
       </figure>
       <figure>
         <div class="anim" style="--cell:80px;--n:6;--scale:2;--dur:.6s">
-          <img src="art/creatures/cave-spider-walk.png" alt="Cave Spider" width="960" height="160" class="pixelated">
+          <img src="art/creatures/cave-spider-walk.png" alt="Cave Spider" width="480" height="80" class="pixelated">
         </div>
         <figcaption>Cave Spider</figcaption>
       </figure>
       <figure>
         <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
-          <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="768" height="192" class="pixelated">
+          <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="384" height="96" class="pixelated">
         </div>
         <figcaption>Duskmoth</figcaption>
       </figure>
@@ -325,11 +329,11 @@ footer a{color:var(--ink-soft)}
       frames the game draws. They eat, hunt, graze, flee and dig in a shared ecosystem that keeps
       changing whether or not anyone is watching.</p>
 
-    <div class="grid cols-2" style="margin-top:1.9rem">
+    <div class="grid beasts" style="margin-top:1.9rem">
       <article class="beast">
         <div class="beast-stage">
-          <div class="anim" style="--cell:96px;--n:6;--scale:2.25;--dur:.6s">
-            <img src="art/creatures/mycelid-walk.png" alt="A Mycelid walking" width="1296" height="216" class="pixelated">
+          <div class="anim" style="--cell:96px;--n:6;--scale:2;--dur:.6s">
+            <img src="art/creatures/mycelid-walk.png" alt="A Mycelid walking" width="576" height="96" class="pixelated">
           </div>
         </div>
         <div class="beast-body">
@@ -347,8 +351,8 @@ footer a{color:var(--ink-soft)}
 
       <article class="beast">
         <div class="beast-stage">
-          <div class="anim" style="--cell:128px;--n:6;--scale:1.7;--dur:.6s">
-            <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf walking" width="1305" height="217" class="pixelated">
+          <div class="anim" style="--cell:128px;--n:6;--scale:2;--dur:.6s">
+            <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf walking" width="768" height="128" class="pixelated">
           </div>
         </div>
         <div class="beast-body">
@@ -366,8 +370,8 @@ footer a{color:var(--ink-soft)}
 
       <article class="beast">
         <div class="beast-stage">
-          <div class="anim" style="--cell:80px;--n:6;--scale:2.7;--dur:.6s">
-            <img src="art/creatures/cave-spider-walk.png" alt="A Cave Spider walking" width="1296" height="216" class="pixelated">
+          <div class="anim" style="--cell:80px;--n:6;--scale:2;--dur:.6s">
+            <img src="art/creatures/cave-spider-walk.png" alt="A Cave Spider walking" width="480" height="80" class="pixelated">
           </div>
         </div>
         <div class="beast-body">
@@ -385,8 +389,8 @@ footer a{color:var(--ink-soft)}
 
       <article class="beast">
         <div class="beast-stage">
-          <div class="anim" style="--cell:96px;--n:4;--scale:2.25;--dur:.67s">
-            <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="864" height="216" class="pixelated">
+          <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
+            <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="384" height="96" class="pixelated">
           </div>
         </div>
         <div class="beast-body">
