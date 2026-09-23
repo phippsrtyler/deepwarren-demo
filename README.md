@@ -5,7 +5,7 @@ need a GPU server, model download, VPN, or account with a model provider.
 
 **[Download the Android APK](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk)** | [Windows setup](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Windows-Setup.zip) | [Mac setup (experimental)](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Mac-Setup.zip)
 
-The demo allows **four simultaneous players** in one shared world, with a waiting queue.
+The demo allows **eight simultaneous players** in one shared world, with a waiting queue.
 Current build: **0.4.0-public-demo (versionCode 10)**. Verify your download against
 `Deepwarren.apk.sha256`, published with each release.
 The host runs on the developer's PC and must be online; this is an early demo, not a continuously available service.
