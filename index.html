@@ -84,7 +84,7 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
 .hero::before{
   content:"";position:absolute;inset:0;
   background-image:url(art/ground/damp_mycelium.jpg);
-  background-size:520px 520px;
+  background-size:480px 480px;
   opacity:.5;
   filter:saturate(1.05);
 }
@@ -201,15 +201,23 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
 /* ---------- scenery gallery ---------- */
 .scenery{
   display:grid;gap:.85rem;
-  grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  /* Cards are wide enough that a real-size prop (the widest is 256px) never
+     hits max-width, so on desktop and tablet every prop renders 1:1 with no
+     resampling at all. On phones the grid narrows and the images scale down
+     with smooth filtering — never nearest, which would drop whole pixel rows. */
+  grid-template-columns:repeat(auto-fit,minmax(272px,1fr));
 }
 .scenery figure{
-  margin:0;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
   background:linear-gradient(180deg,#0e1817,#0b1312);
   border:1px solid var(--line-soft);border-radius:12px;
-  padding:1rem .6rem .75rem;
+  padding:1rem .6rem .75rem;min-height:308px;
 }
-.scenery img{height:92px;width:auto;max-width:100%;object-fit:contain;image-rendering:pixelated}
+/* Props are drawn 1:1 at their real size, so nothing is resampled: pixel art
+   stays crisp and the cards keep true in-game proportions. Smooth rendering
+   only matters on narrow screens, where max-width clamps the image and
+   nearest-neighbour would drop entire pixel rows (that reads as broken art). */
+.scenery img{height:auto;width:auto;max-width:100%;display:block;image-rendering:auto}
 /* ---------- download ---------- */
 .download{
   background:
@@ -260,13 +268,13 @@ footer{
 footer p{margin:.5rem 0}
 footer a{color:var(--ink-soft)}
 .foot-brand{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem}
-.foot-brand img{height:34px;width:auto;image-rendering:pixelated}
+.foot-brand img{height:63px;width:auto;image-rendering:pixelated}
 .foot-brand strong{color:var(--ink);font-size:1rem;letter-spacing:-.01em}
 
 @media (max-width:560px){
   body{font-size:16px}
   .beast-stage{min-height:176px}
-  .scenery{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
+  .scenery{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 }
 
 
@@ -449,34 +457,28 @@ footer a{color:var(--ink-soft)}
     <h2>The set dressing</h2>
     <p class="lede">Ground, hovels, root arches, mineral spikes and colonies of glow fungus —
       the actual assets placed across the map, shown at their real size.</p>
-    <div class="grid cols-3" style="margin-top:1.9rem">
-      <div class="scenery">
-        <figure><img src="art/scenery/cap_hut.png" alt="Cap hut" class="pixelated"><figcaption>Cap hut</figcaption></figure>
-        <figure><img src="art/scenery/stalk_arch.png" alt="Stalk arch" class="pixelated"><figcaption>Stalk arch</figcaption></figure>
-        <figure><img src="art/scenery/split_crown.png" alt="Split crown" class="pixelated"><figcaption>Split crown</figcaption></figure>
-        <figure><img src="art/scenery/sunken_ring.png" alt="Sunken ring" class="pixelated"><figcaption>Sunken ring</figcaption></figure>
-      </div>
-      <div class="scenery">
-        <figure><img src="art/scenery/shelf_grove.png" alt="Shelf grove" class="pixelated"><figcaption>Shelf grove</figcaption></figure>
-        <figure><img src="art/scenery/forked_gill_stand.png" alt="Forked gill stand" class="pixelated"><figcaption>Forked gill stand</figcaption></figure>
-        <figure><img src="art/scenery/fan_shelf_colony.png" alt="Fan shelf colony" class="pixelated"><figcaption>Fan shelf colony</figcaption></figure>
-        <figure><img src="art/scenery/ore_spine.png" alt="Ore spine" class="pixelated"><figcaption>Ore spine</figcaption></figure>
-      </div>
-      <div class="scenery">
-        <figure><img src="art/scenery/root_braid.png" alt="Root braid" class="pixelated"><figcaption>Root braid</figcaption></figure>
-        <figure><img src="art/scenery/root_bank.png" alt="Root bank" class="pixelated"><figcaption>Root bank</figcaption></figure>
-        <figure><img src="art/scenery/fallen_root.png" alt="Fallen root" class="pixelated"><figcaption>Fallen root</figcaption></figure>
-        <figure><img src="art/scenery/rotted_stump.png" alt="Rotted stump" class="pixelated"><figcaption>Rotted stump</figcaption></figure>
-      </div>
+    <div class="scenery" style="margin-top:1.9rem">
+      <figure><img src="art/scenery/cap_hut.png" alt="Cap hut"><figcaption>Cap hut</figcaption></figure>
+      <figure><img src="art/scenery/stalk_arch.png" alt="Stalk arch"><figcaption>Stalk arch</figcaption></figure>
+      <figure><img src="art/scenery/split_crown.png" alt="Split crown"><figcaption>Split crown</figcaption></figure>
+      <figure><img src="art/scenery/sunken_ring.png" alt="Sunken ring"><figcaption>Sunken ring</figcaption></figure>
+      <figure><img src="art/scenery/shelf_grove.png" alt="Shelf grove"><figcaption>Shelf grove</figcaption></figure>
+      <figure><img src="art/scenery/forked_gill_stand.png" alt="Forked gill stand"><figcaption>Forked gill stand</figcaption></figure>
+      <figure><img src="art/scenery/fan_shelf_colony.png" alt="Fan shelf colony"><figcaption>Fan shelf colony</figcaption></figure>
+      <figure><img src="art/scenery/ore_spine.png" alt="Ore spine"><figcaption>Ore spine</figcaption></figure>
+      <figure><img src="art/scenery/root_braid.png" alt="Root braid"><figcaption>Root braid</figcaption></figure>
+      <figure><img src="art/scenery/root_bank.png" alt="Root bank"><figcaption>Root bank</figcaption></figure>
+      <figure><img src="art/scenery/fallen_root.png" alt="Fallen root"><figcaption>Fallen root</figcaption></figure>
+      <figure><img src="art/scenery/rotted_stump.png" alt="Rotted stump"><figcaption>Rotted stump</figcaption></figure>
     </div>
 
     <div class="grid cols-2" style="margin-top:1.6rem">
       <figure style="margin:0;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden">
-        <img src="art/ground/hollow_floor.jpg" alt="Hollow floor ground texture" style="display:block;width:100%" width="480" height="480">
+        <img src="art/ground/hollow_floor.jpg" alt="Hollow floor ground texture" style="display:block;width:100%;height:auto" width="480" height="480">
         <figcaption style="padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint)">Hollow floor — the ground the whole floor is tiled with.</figcaption>
       </figure>
       <figure style="margin:0;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden">
-        <img src="art/ground/damp_mycelium.jpg" alt="Damp mycelium ground texture" style="display:block;width:100%" width="480" height="480">
+        <img src="art/ground/damp_mycelium.jpg" alt="Damp mycelium ground texture" style="display:block;width:100%;height:auto" width="480" height="480">
         <figcaption style="padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint)">Damp mycelium — the wet mats that feed the grazers.</figcaption>
       </figure>
     </div>
