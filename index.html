@@ -2,703 +2,532 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Deepwarren — free online co-op Android demo</title>
-<meta name="description" content="Deepwarren is a free online co-op Android demo set in the Fungal Hollows: a large, changing fungal underworld. Eight players share one world. Download the APK.">
-<meta property="og:title" content="Deepwarren — free online co-op Android demo">
-<meta property="og:description" content="Eight players, one shared fungal underworld. No GPU, no account, no setup — just install and play.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="art/screens/overworld.png">
+<meta name="description" content="Deepwarren is a co-operative survival crawl through a living fungal underworld. Eight players share one world. Free Android demo.">
+<meta property="og:title" content="Deepwarren">
+<meta property="og:description" content="A living fungal underworld. Eight players, one world. Free online co-op Android demo.">
+<meta property="og:image" content="https://phippsrtyler.github.io/deepwarren-demo/art/screens/overworld.png">
+<meta name="theme-color" content="#0d0b0a">
 <link rel="icon" href="art/creatures/mycelid-portrait.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
 :root{
-  color-scheme:dark;
-  --ink:#eef0e6;
-  --ink-soft:#b9c4b8;
-  --ink-faint:#8b968c;
-  --spore:#b7d7bd;
-  --spore-bright:#d9f0d6;
-  --amber:#edc27d;
-  --amber-deep:#c99a52;
-  --ground:#0b1211;
-  --ground-2:#101a19;
-  --panel:#131f1e;
-  --panel-2:#172524;
-  --line:#25393a;
-  --line-soft:#1d2d2e;
-  --radius:14px;
-  --page:1080px;
+  --bg:#0d0b0a; --bg-2:#141110; --panel:#1a1614; --line:#2c2522; --line-2:#3a312c;
+  --ink:#ece4da; --ink-soft:#b3a79a; --ink-dim:#8a7f74;
+  --spore:#9fd3a4; --spore-bright:#c6f0c8; --amber:#e3a857; --violet:#a57bc4;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --pixel:"Silkscreen","Courier New",monospace;
+  --wrap:1180px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:var(--ground);
-  color:var(--ink);
-  font:17px/1.7 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-img{max-width:100%}
-.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
-.wrap{max-width:var(--page);margin:0 auto;padding:0 1.25rem}
-a{color:var(--spore);text-underline-offset:.22em;text-decoration-thickness:1px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--spore);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{color:var(--spore-bright)}
-a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offset:4px;border-radius:4px}
-h1,h2,h3{line-height:1.15;margin:0;font-weight:750;letter-spacing:-.015em}
-h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
-h3{font-size:1.06rem}
-p{margin:.85rem 0}
-section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
-.lede{font-size:1.13rem;color:var(--ink-soft);max-width:62ch}
-.eyebrow{
-  font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--amber);font-weight:700;margin:0 0 .7rem;
-}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{width:min(var(--wrap),100% - 2.5rem);margin-inline:auto}
+.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.1;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(2rem,4.2vw,3.1rem)}
+h3{font-size:1.35rem}
+p{margin:0}
+.eyebrow{font:400 .72rem/1 var(--pixel);letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+.lede{color:var(--ink-soft);font-size:1.12rem;max-width:44rem;margin-top:1rem}
+section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
+.rule{border-top:1px solid var(--line)}
 
-/* ---------- animated game sprites (real animation rows, stepped frame by frame) ---------- */
-.anim{
-  width:calc(var(--cell) * var(--scale));
-  height:calc(var(--cell) * var(--scale));
-  overflow:hidden;
-  flex:none;
-  position:relative;
-}
-.anim img{
-  height:100%;width:auto;display:block;
-  max-width:none;
-  image-rendering:pixelated;
-  animation:deepwarren-scroll var(--dur,0.8s) steps(var(--n)) infinite;
-}
-@keyframes deepwarren-scroll{to{transform:translateX(calc(var(--cell) * var(--n) * var(--scale) * -1))}}
+.nav{position:sticky;top:0;z-index:40;background:rgba(13,11,10,.82);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.scrolled{border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:1.5rem;height:62px}
+.brand{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--ink);text-decoration:none}
+.brand img{height:30px;width:auto}
+.nav ul{display:flex;gap:1.4rem;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{color:var(--ink-soft);text-decoration:none;font-size:.92rem}
+.nav ul a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.35rem;border-radius:999px;font:600 .95rem/1 var(--sans);text-decoration:none;border:1px solid transparent;transition:transform .15s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--spore);color:#10160f}
+.btn-primary:hover{background:var(--spore-bright);color:#10160f}
+.btn-ghost{border-color:var(--line-2);color:var(--ink);background:rgba(13,11,10,.4)}
+.btn-ghost:hover{border-color:var(--ink-dim);color:var(--ink)}
+.nav .btn{padding:.55rem 1rem;font-size:.85rem}
+@media (max-width:820px){.nav ul{display:none}.nav .btn{margin-left:auto}}
+
+.hero{position:relative;min-height:min(92vh,880px);display:flex;align-items:flex-end;overflow:hidden;padding:0}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 45%}
+.hero-bg::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(13,11,10,.6) 0%,rgba(13,11,10,.15) 35%,rgba(13,11,10,.75) 72%,var(--bg) 100%),
+  radial-gradient(ellipse at 15% 85%,rgba(13,11,10,.85),transparent 60%)}
+.spores{position:absolute;inset:0;pointer-events:none}
+.spores i{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--spore-bright);box-shadow:0 0 8px var(--spore);opacity:0;animation:drift 14s linear infinite}
+@keyframes drift{0%{transform:translateY(0);opacity:0}15%{opacity:.8}100%{transform:translateY(-60vh) translateX(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.spores{display:none}}
+.hero-inner{position:relative;padding:8rem 0 4.5rem}
+.hero h1{font-size:clamp(3.6rem,11vw,8rem);font-weight:700;letter-spacing:-.03em;line-height:.92}
+.hero h1 span{color:var(--spore)}
+.hero .tag{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.85rem);color:var(--ink);max-width:36rem;margin-top:1.2rem;line-height:1.3}
+.hero .sub{color:var(--ink-soft);max-width:34rem;margin-top:1rem}
+.hero .cta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;margin-top:2.2rem;font-size:.85rem;color:var(--ink-dim)}
+.facts b{color:var(--ink);font-weight:600}
+
+.cast{display:flex;justify-content:center;align-items:flex-end;gap:clamp(1.5rem,5vw,4.5rem);flex-wrap:wrap;padding:2.5rem 0 0}
+.cast figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.cast figcaption{font:400 .66rem/1 var(--pixel);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+.anim{width:calc(var(--cell)*var(--scale));height:calc(var(--cell)*var(--scale));overflow:hidden;flex:none}
+.anim img{height:100%;width:auto;max-width:none;image-rendering:pixelated;animation:scroll var(--dur,.8s) steps(var(--n)) infinite}
+@keyframes scroll{to{transform:translateX(calc(var(--cell)*var(--n)*var(--scale)*-1))}}
 @media (prefers-reduced-motion:reduce){.anim img{animation:none}}
 
-/* ---------- hero ---------- */
-.hero{
-  position:relative;
-  padding:clamp(4rem,11vw,7.5rem) 0 0;
-  border-top:0;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";position:absolute;inset:0;
-  background-image:url(art/ground/damp_mycelium.jpg);
-  background-size:480px 480px;
-  opacity:.5;
-  filter:saturate(1.05);
-}
-.hero::after{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(120% 78% at 50% 8%,rgba(11,18,17,.18) 0%,rgba(11,18,17,.86) 58%,var(--ground) 100%),
-    linear-gradient(180deg,rgba(11,18,17,.72) 0%,rgba(11,18,17,.3) 34%,var(--ground) 97%);
-}
-.hero > *{position:relative;z-index:2}
-.hero-inner{max-width:760px}
-.title{
-  font-size:clamp(2.9rem,10vw,5.6rem);
-  font-weight:800;letter-spacing:-.035em;
-  margin:0;
-  color:#f3f7ee;
-  text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 46px rgba(183,215,189,.25);
-}
-.title span{color:var(--spore)}
-.hero .lede{font-size:clamp(1.05rem,2.3vw,1.3rem);margin:1.1rem 0 0}
-.tagline{
-  display:inline-block;margin:0 0 1rem;
-  font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;
-  color:var(--spore);
-  border:1px solid var(--line);background:rgba(19,31,30,.72);
-  border-radius:999px;padding:.34rem .85rem;
-}
-.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.7rem 0 0}
-.btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.85rem 1.35rem;border-radius:999px;
-  font-weight:700;text-decoration:none;font-size:.98rem;
-  border:1px solid transparent;transition:transform .12s ease,background .12s ease;
-}
-.btn-primary{background:var(--spore);color:#0b1211}
-.btn-primary:hover{background:var(--spore-bright);color:#0b1211;transform:translateY(-2px)}
-.btn-ghost{background:rgba(23,37,36,.72);color:var(--ink);border-color:var(--line)}
-.btn-ghost:hover{background:#1e3130;color:var(--ink);transform:translateY(-2px)}
-.meta-line{
-  margin:1.15rem 0 0;font-size:.9rem;color:var(--ink-faint);
-  display:flex;flex-wrap:wrap;gap:.45rem .95rem;
-}
-.meta-line b{color:var(--ink-soft);font-weight:650}
-.cast{
-  position:relative;
-  display:flex;align-items:flex-end;justify-content:center;
-  flex-wrap:wrap;gap:clamp(.6rem,3vw,2.1rem);
-  margin-top:clamp(2rem,5vw,3.2rem);
-  padding-bottom:1.5rem;
-}
-.cast::after{
-  content:"";position:absolute;left:-10%;right:-10%;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(183,215,189,.5),transparent);
-}
-.cast figure{margin:0;text-align:center}
-/* ---------- layout helpers ---------- */
-.grid{display:grid;gap:1.1rem}
-.cols-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-.cols-3{grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
-.cols-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-.card{
-  background:linear-gradient(180deg,var(--panel-2),var(--panel));
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:1.2rem 1.25rem;
-}
-.card h3{color:var(--spore-bright);margin-bottom:.3rem}
-.card p{margin:.4rem 0 0;color:var(--ink-soft);font-size:.95rem}
-.card .kicker{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:700}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:3rem}
+.pillar{background:var(--bg-2);padding:2rem 1.8rem}
+.pillar .num{font:400 .7rem/1 var(--pixel);color:var(--amber);letter-spacing:.12em}
+.pillar h3{margin:.9rem 0 .6rem}
+.pillar p{color:var(--ink-soft);font-size:.97rem}
+@media (max-width:860px){.pillars{grid-template-columns:1fr}}
 
-.beasts{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
-@media (max-width:900px){.beasts{grid-template-columns:1fr}}
+.shot{margin:0;position:relative}
+.shot img{border-radius:10px;border:1px solid var(--line-2);width:100%;cursor:zoom-in;background:#000}
+.shot figcaption{color:var(--ink-dim);font-size:.9rem;margin-top:.8rem;max-width:40rem}
+.shot figcaption b{color:var(--ink-soft);font-weight:600}
+.device{display:grid;grid-template-columns:1.75fr 1fr;gap:1.2rem;align-items:start;margin-top:3rem}
+.device .stack{display:grid;gap:1.2rem}
+@media (max-width:860px){.device{grid-template-columns:1fr}}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem;margin-top:1.4rem}
+.gallery.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:700px){.gallery,.gallery.three{grid-template-columns:1fr}}
+.label{position:absolute;top:.7rem;left:.7rem;font:400 .6rem/1 var(--pixel);letter-spacing:.12em;text-transform:uppercase;background:rgba(13,11,10,.8);color:var(--ink-soft);padding:.45rem .55rem;border-radius:5px;border:1px solid var(--line-2);pointer-events:none}
 
-/* ---------- creature cards ---------- */
-.beast{
-  display:flex;flex-direction:column;
-  background:linear-gradient(180deg,var(--panel-2),var(--panel));
-  border:1px solid var(--line);border-radius:var(--radius);
-  overflow:hidden;
-}
-.beast-stage{
-  position:relative;display:flex;align-items:flex-end;justify-content:center;
-  min-height:284px;padding:1rem .75rem 0;
-  background:
-    radial-gradient(78% 62% at 50% 88%,rgba(183,215,189,.14),transparent 70%),
-    linear-gradient(180deg,#0d1615,#0a1110);
-}
-.beast-stage::after{
-  content:"";position:absolute;left:14%;right:14%;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(183,215,189,.42),transparent);
-}
-.beast-body{padding:1rem 1.2rem 1.25rem;border-top:1px solid var(--line-soft)}
-.beast-body h3{margin:0;font-size:1.06rem;color:var(--spore-bright)}
-.beast-role{margin:.15rem 0 .5rem;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:700}
-.beast-body p{margin:0;font-size:.92rem;color:var(--ink-soft)}
-.beast-body dl{margin:.7rem 0 0;font-size:.82rem;color:var(--ink-faint);display:grid;grid-template-columns:auto 1fr;gap:.15rem .6rem}
-.beast-body dt{color:var(--ink-faint)}
-.beast-body dd{margin:0;color:var(--ink-soft)}
+.battle-top{margin-top:3rem}
+.verbs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem}
+.verbs span{font:400 .68rem/1 var(--pixel);letter-spacing:.1em;padding:.55rem .75rem;border:1px solid var(--line-2);border-radius:6px;color:var(--ink-soft);background:var(--panel)}
+.verbs span.hot{border-color:var(--violet);color:#e3d2f0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
 
-/* ---------- world facts ---------- */
-.facts{list-style:none;margin:0;padding:0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-.facts li{
-  background:rgba(19,31,30,.62);border:1px solid var(--line-soft);border-radius:10px;
-  padding:.7rem .85rem;
-}
-.facts b{display:block;font-size:1.32rem;color:var(--spore);font-weight:750;line-height:1.2}
-.facts span{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
-.places{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 0;padding:0;list-style:none}
-.places li{
-  font-size:.82rem;color:var(--ink-soft);
-  border:1px solid var(--line-soft);background:rgba(19,31,30,.55);
-  border-radius:999px;padding:.26rem .7rem;
-}
+.creatures{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem;margin-top:3rem}
+@media (max-width:860px){.creatures{grid-template-columns:1fr}}
+.creature{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:1.8rem;display:grid;grid-template-columns:auto 1fr;gap:1.6rem;align-items:center}
+.creature .stage{width:170px;height:170px;display:grid;place-items:center;background:radial-gradient(circle at 50% 70%,#241e1a,transparent 70%);border-radius:10px}
+.creature .role{font:400 .64rem/1 var(--pixel);letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:.5rem 0 .7rem}
+.creature p{color:var(--ink-soft);font-size:.95rem}
+.creature dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .9rem;margin:1rem 0 0;font-size:.85rem}
+.creature dt{color:var(--ink-dim)}
+.creature dd{margin:0;color:var(--ink-soft)}
+@media (max-width:520px){.creature{grid-template-columns:1fr}.creature .stage{width:100%}}
+.aside-note{margin-top:1.6rem;color:var(--ink-dim);font-size:.95rem;max-width:48rem}
 
-/* ---------- scenery gallery ---------- */
-.scenery{
-  display:grid;gap:.85rem;
-  /* Cards are wide enough that a real-size prop (the widest is 256px) never
-     hits max-width, so on desktop and tablet every prop renders 1:1 with no
-     resampling at all. On phones the grid narrows and the images scale down
-     with smooth filtering — never nearest, which would drop whole pixel rows. */
-  grid-template-columns:repeat(auto-fit,minmax(272px,1fr));
-}
-.scenery figure{
-  margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
-  background:linear-gradient(180deg,#0e1817,#0b1312);
-  border:1px solid var(--line-soft);border-radius:12px;
-  padding:1rem .6rem .75rem;min-height:308px;
-}
-/* Props are drawn 1:1 at their real size, so nothing is resampled: pixel art
-   stays crisp and the cards keep true in-game proportions. Smooth rendering
-   only matters on narrow screens, where max-width clamps the image and
-   nearest-neighbour would drop entire pixel rows (that reads as broken art). */
-.scenery img{height:auto;width:auto;max-width:100%;display:block;image-rendering:auto}
-/* ---------- screenshot gallery (frames captured off the released APK) ---------- */
-.shots{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:1.1rem}
-.shots figure{
-  margin:0;display:flex;flex-direction:column;
-  background:linear-gradient(180deg,#0e1817,#0b1312);
-  border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;
-}
-.shots img{display:block;width:100%;height:auto}
-.shots figcaption{padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint);border-top:1px solid var(--line-soft)}
-.shots figcaption b{color:var(--ink-soft)}
-.shots .wide{grid-column:1/-1}
-/* ---------- download ---------- */
-.download{
-  background:
-    radial-gradient(90% 120% at 12% 0%,rgba(183,215,189,.14),transparent 62%),
-    linear-gradient(180deg,#152523,#101b1a);
-  border:1px solid var(--line);border-radius:18px;
-  padding:clamp(1.4rem,4vw,2.3rem);
-}
-.download h2{margin-bottom:.4rem}
-.dl-grid{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:1.35rem}
-.dl-item{
-  display:flex;flex-direction:column;gap:.3rem;
-  background:rgba(11,18,17,.55);border:1px solid var(--line-soft);border-radius:12px;
-  padding:.95rem 1rem;text-decoration:none;
-}
-.dl-item strong{color:var(--spore-bright);font-size:1rem}
-.dl-item span{font-size:.84rem;color:var(--ink-faint)}
-.dl-item:hover{border-color:var(--spore);background:rgba(17,29,28,.85)}
-.hash{
-  margin-top:1.1rem;font:0.78rem/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  color:var(--ink-faint);word-break:break-all;
-}
-.hash b{color:var(--ink-soft);display:block;font-family:inherit;letter-spacing:.1em;text-transform:uppercase;font-size:.68rem}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:2.5rem}
+.stats div{background:var(--bg-2);padding:1.3rem 1rem}
+.stats b{display:block;font-family:var(--serif);font-size:1.9rem;font-weight:600;color:var(--spore)}
+.stats span{font-size:.8rem;color:var(--ink-dim)}
+@media (max-width:860px){.stats{grid-template-columns:repeat(3,1fr)}}
+.places{columns:4 12rem;column-gap:2rem;list-style:none;padding:0;margin:1.4rem 0 0;font-size:.93rem;color:var(--ink-soft)}
+.places li{break-inside:avoid;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+.scenery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-top:2rem}
+.scenery figure{margin:0;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:1rem;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:190px}
+.scenery img{max-height:140px;width:auto}
+.scenery figcaption{font-size:.78rem;color:var(--ink-dim);margin-top:.7rem}
 
-/* ---------- controls ---------- */
-.keys{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));margin:1.1rem 0 0;padding:0;list-style:none}
-.keys li{display:flex;align-items:baseline;gap:.6rem;font-size:.92rem;color:var(--ink-soft)}
-kbd{
-  font:600 .78rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  background:#0b1312;border:1px solid var(--line);border-bottom-width:2px;
-  border-radius:6px;padding:.32rem .5rem;color:var(--spore-bright);white-space:nowrap;
-}
+.coop{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3rem}
+@media (max-width:860px){.coop{grid-template-columns:1fr}}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:1.8rem}
+.card .k{font:400 .64rem/1 var(--pixel);letter-spacing:.12em;text-transform:uppercase;color:var(--spore)}
+.card h3{margin:.8rem 0 .6rem}
+.card p{color:var(--ink-soft);font-size:.95rem}
+.big8{font-family:var(--serif);font-size:clamp(6rem,16vw,11rem);font-weight:700;line-height:.8;color:var(--spore);text-align:center}
+@media (max-width:860px){.big8{display:none}}
 
-/* ---------- honest status ---------- */
-.status{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:.65rem}
-.status li{display:grid;grid-template-columns:auto 1fr;gap:.65rem;align-items:start;font-size:.94rem;color:var(--ink-soft)}
-.dot{margin-top:.48rem;width:.6rem;height:.6rem;border-radius:50%;flex:none}
-.dot-ok{background:var(--spore)}
-.dot-warn{background:var(--amber)}
-.dot-info{background:#6d8d99}
-.status b{color:var(--ink)}
+.download{background:linear-gradient(160deg,#1b2419,#141110 55%);border:1px solid #2f3a2c;border-radius:20px;padding:clamp(2rem,5vw,3.5rem)}
+.dl-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1rem;margin-top:2rem}
+@media (max-width:860px){.dl-grid{grid-template-columns:1fr}}
+.dl-item{display:flex;flex-direction:column;gap:.35rem;padding:1.3rem 1.4rem;border:1px solid var(--line-2);border-radius:12px;text-decoration:none;color:var(--ink);background:rgba(13,11,10,.5);transition:border-color .2s,transform .15s}
+.dl-item:hover{border-color:var(--spore);color:var(--ink);transform:translateY(-2px)}
+.dl-item strong{font-size:1.05rem}
+.dl-item span{font-size:.85rem;color:var(--ink-dim)}
+.dl-item.main{background:var(--spore);color:#10160f;border-color:var(--spore)}
+.dl-item.main span{color:#2b3a2a}
+.dl-item.main:hover{background:var(--spore-bright);color:#10160f}
+.hash{margin-top:1.6rem;font:.78rem/1.5 ui-monospace,Consolas,monospace;color:var(--ink-dim);word-break:break-all}
+.hash b{display:block;font:600 .8rem var(--sans);color:var(--ink-soft);margin-bottom:.3rem}
 
-/* ---------- footer ---------- */
-footer{
-  border-top:1px solid var(--line-soft);padding:2.4rem 0 3rem;
-  font-size:.86rem;color:var(--ink-faint);
-}
-footer p{margin:.5rem 0}
-footer a{color:var(--ink-soft)}
-.foot-brand{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem}
-.foot-brand img{height:63px;width:auto;image-rendering:pixelated}
-.foot-brand strong{color:var(--ink);font-size:1rem;letter-spacing:-.01em}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem 2rem;list-style:none;padding:0;margin:2.2rem 0 0}
+.keys li{display:flex;align-items:center;gap:.9rem;padding:.55rem 0;border-bottom:1px solid var(--line);color:var(--ink-soft);font-size:.93rem}
+kbd{font:600 .74rem/1 ui-monospace,Consolas,monospace;color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-bottom-width:3px;border-radius:6px;padding:.38rem .5rem;min-width:1.9rem;text-align:center}
+.keys .ks{display:flex;gap:.3rem;min-width:7.5rem}
 
-@media (max-width:560px){
-  body{font-size:16px}
-  .beast-stage{min-height:176px}
-  .scenery{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-}
+.honest{list-style:none;padding:0;margin:2.2rem 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media (max-width:860px){.honest{grid-template-columns:1fr}}
+.honest li{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:1.1rem 1.3rem;color:var(--ink-soft);font-size:.95rem}
+.honest li.ok{border-left-color:var(--spore)}
+.honest b{color:var(--ink)}
 
+footer{border-top:1px solid var(--line);padding:3.5rem 0 4rem;color:var(--ink-dim);font-size:.88rem}
+footer .wrap{display:grid;grid-template-columns:1fr 2fr;gap:2.5rem}
+footer p+p{margin-top:.8rem}
+@media (max-width:760px){footer .wrap{grid-template-columns:1fr}}
 
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
 
+.lb{position:fixed;inset:0;z-index:100;background:rgba(5,4,4,.94);display:grid;place-items:center;padding:2rem;cursor:zoom-out}
+.lb img{max-height:86vh;width:auto;max-width:100%;border-radius:8px;border:1px solid var(--line-2)}
+.lb p{position:absolute;bottom:1.2rem;left:0;right:0;text-align:center;color:var(--ink-soft);font-size:.9rem;padding:0 2rem}
 </style>
+<script>document.documentElement.className='js'</script>
 </head>
 <body>
-<header class="hero">
-  <div class="wrap">
-    <div class="hero-inner">
-      <p class="tagline">Free online co-op demo · Android</p>
-      <h1 class="title">Deep<span>warren</span></h1>
-      <p class="lede">An immense, changing fungal underworld. Eight players share one living world —
-        no GPU, no account, no model download, no server setup.</p>
-      <div class="cta">
-        <a class="btn btn-primary" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk">Download for Android</a>
-        <a class="btn btn-ghost" href="#world">Tour the world</a>
-      </div>
-      <p class="meta-line">
-        <span>Build <b>0.4.0-public-demo</b></span>
-        <span><b>8</b> players per world</span>
-        <span>APK <b>168 MB</b></span>
-        <span>Android / Thor tablet</span>
-      </p>
-    </div>
 
-    <div class="cast" role="img" aria-label="Game sprites of the Mycelid, the Dusk-Eyed Wolf, a Cave Spider and the companion cat Duskmoth, animated from the game's own sprite sheets.">
-      <figure>
-        <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
-          <img src="art/creatures/mycelid-idle.png" alt="The Mycelid — the playable fungal folk" width="384" height="96" class="pixelated">
-        </div>
-        <figcaption>Mycelid</figcaption>
-      </figure>
-      <figure>
-        <div class="anim" style="--cell:128px;--n:4;--scale:2;--dur:.4s">
-          <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf" width="512" height="128" class="pixelated">
-        </div>
-        <figcaption>Dusk-Eyed Wolf</figcaption>
-      </figure>
-      <figure>
-        <div class="anim" style="--cell:80px;--n:4;--scale:2;--dur:.4s">
-          <img src="art/creatures/cave-spider-walk.png" alt="Cave Spider" width="320" height="80" class="pixelated">
-        </div>
-        <figcaption>Cave Spider</figcaption>
-      </figure>
-      <figure>
-        <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
-          <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="384" height="96" class="pixelated">
-        </div>
-        <figcaption>Duskmoth</figcaption>
-      </figure>
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="art/creatures/mycelid-portrait.png" alt="" class="pixelated">Deepwarren</a>
+    <ul>
+      <li><a href="#screens">Screens</a></li>
+      <li><a href="#battle">Battle</a></li>
+      <li><a href="#creatures">Creatures</a></li>
+      <li><a href="#world">World</a></li>
+      <li><a href="#coop">Co-op</a></li>
+      <li><a href="#status">Status</a></li>
+    </ul>
+    <a class="btn btn-primary" href="#download">Download</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="art/screens/overworld.png" alt="" class="pixelated"></div>
+  <div class="spores" aria-hidden="true" id="spores"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Free online co-op demo · Android</p>
+    <h1>Deep<span>warren</span></h1>
+    <p class="tag">An immense, changing fungal underworld. Eight players share one living world.</p>
+    <p class="sub">No GPU, no account, no model download, no server setup. Install it and walk in.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#download">Download for Android</a>
+      <a class="btn btn-ghost" href="#screens">See it running</a>
     </div>
+    <p class="facts"><span>Build <b>0.4.0-public-demo</b></span><span><b>8</b> players per world</span><span>APK <b>168 MB</b></span><span>Android 8+ · Thor tablet</span></p>
   </div>
 </header>
-<section id="shots">
+
+<div class="wrap">
+  <div class="cast" role="img" aria-label="The Mycelid, the Dusk-Eyed Wolf, a Cave Spider and the companion cat Duskmoth, animated from the game's own sprite sheets.">
+    <figure><div class="anim" style="--cell:96px;--n:4;--scale:1.5;--dur:.67s"><img src="art/creatures/mycelid-idle.png" alt="" width="384" height="96"></div><figcaption>Mycelid</figcaption></figure>
+    <figure><div class="anim" style="--cell:128px;--n:4;--scale:1.5;--dur:.4s"><img src="art/creatures/old-wolf-walk.png" alt="" width="512" height="128"></div><figcaption>Dusk-Eyed Wolf</figcaption></figure>
+    <figure><div class="anim" style="--cell:80px;--n:4;--scale:1.5;--dur:.4s"><img src="art/creatures/cave-spider-walk.png" alt="" width="320" height="80"></div><figcaption>Cave Spider</figcaption></figure>
+    <figure><div class="anim" style="--cell:96px;--n:6;--scale:1.5;--dur:.6s"><img src="art/creatures/duskmoth-walk.png" alt="" width="576" height="96"></div><figcaption>Duskmoth</figcaption></figure>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <p class="eyebrow">What this is</p>
+    <h2 class="reveal">A world that keeps its own books.</h2>
+    <p class="lede reveal">Deepwarren is a co-operative survival crawl through a fungal underworld. The creatures,
+      the factions and the roaming commanders run on a simulation that keeps going between your visits.
+      It remembers, it decays, it spreads, and it changes what waits for you next time.</p>
+    <div class="pillars reveal">
+      <div class="pillar"><p class="num">01 · Ecosystem</p><h3>Nothing waits for you</h3>
+        <p>Creatures eat, hunt, graze, flee and dig on their own. A spider on the far side of the map keeps living while you walk back to camp.</p></div>
+      <div class="pillar"><p class="num">02 · Bodies</p><h3>Rebuild yourself</h3>
+        <p>Head, torso and each limb can be replaced with parts taken from what you fight. Spider fangs, raptor forelimbs, hare hindlegs.</p></div>
+      <div class="pillar"><p class="num">03 · Shared world</p><h3>One world, eight people</h3>
+        <p>Not eight copies of a map. What another player kills stays dead, and what they leave behind stays there.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="rule">
   <div class="wrap">
     <p class="eyebrow">Captured from the released build</p>
-    <h2>What you actually get</h2>
-    <p class="lede">Every frame below is a screenshot of the released APK running on the demo's own
-      virtual device — no mock-ups. The wide frame is the world display; the square ones are the
-      lower display, a real second screen the launcher sets up for you.</p>
+    <h2 class="reveal">Two screens, one game.</h2>
+    <p class="lede reveal">Every frame on this page is a screenshot of the released APK. Nothing is mocked up.
+      The wide frame is the world display. The smaller ones are the lower display, a real second screen
+      that the launcher sets up for you. Click any shot to enlarge it.</p>
 
-    <div class="shots">
-      <figure class="wide">
-        <img src="art/screens/overworld.png" alt="The Fungal Hollows on the world display: cap huts, gill stands and mushroom-capped walkers in camp, with a cave spider on the path east" width="1920" height="1080">
-        <figcaption>The Fungal Hollows on the world display — Gillhearth's camp hut is lettered on
-          the ground itself, and the mushroom-capped walkers keep their own routes instead of
-          standing around for you.</figcaption>
+    <div class="device reveal">
+      <figure class="shot"><span class="label">World display</span>
+        <img src="art/screens/world-hollows.jpg" alt="The Fungal Hollows: dirt paths winding between giant mushroom stands and ore spines" loading="lazy">
+        <figcaption><b>The Fungal Hollows.</b> Paths wind between gill stands and ore spines. Every creature out here keeps its own route.</figcaption>
       </figure>
-      <figure>
-        <img src="art/screens/field-map.png" alt="The lower display while exploring: vitals, provisions, phase meter and the field map of everywhere this character has walked" width="960" height="540">
-        <figcaption>The lower display while exploring: vitals, provisions, the phase meter, and the
-          field map of what this character has actually walked. The tabs along the bottom are where
-          the whole interface lives.</figcaption>
+      <div class="stack">
+        <figure class="shot"><span class="label">Lower display</span>
+          <img src="art/screens/field-map.png" alt="The lower display while exploring, showing vitals, provisions and the field map" loading="lazy" class="pixelated">
+          <figcaption><b>Field map.</b> Vitals, provisions, the phase meter and the ground this character has actually walked.</figcaption>
+        </figure>
+        <figure class="shot"><span class="label">Lower display</span>
+          <img src="art/screens/director.png" alt="The Director panel showing effects applied to the world and a commander's suspicions" loading="lazy" class="pixelated">
+          <figcaption><b>The Director.</b> Effects applied to the world, the council's last decision and a commander's suspicions about your route.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="gallery reveal">
+      <figure class="shot"><span class="label">World display</span>
+        <img src="art/screens/overworld.png" alt="Gillhearth's camp hut with its name lettered on the ground and mushroom-capped walkers" loading="lazy">
+        <figcaption><b>Gillhearth Refuge.</b> The camp's name is lettered on the ground itself, and the walkers keep their own routes.</figcaption>
       </figure>
-      <figure>
-        <img src="art/screens/director.png" alt="The Director panel: source hosted, twelve effects applied to the world, the council's last decision and a commander's suspicions" width="960" height="540">
-        <figcaption>The Director panel mid-run — <b>source: hosted</b>, twelve effects applied to the
-          world, the council's last decision, and a commander's suspicions about your route and
-          party size.</figcaption>
+      <figure class="shot"><span class="label">Lower display</span>
+        <img src="art/screens/controls.png" alt="The in-game controls reference" loading="lazy" class="pixelated">
+        <figcaption><b>In-game reference (F2).</b> The D-pad moves, A interacts, and meeting a hostile creature starts a battle.</figcaption>
       </figure>
-      <figure>
-        <img src="art/screens/creation-race.png" alt="Character creation, race page: four races listed, three marked unavailable" width="960" height="540">
-        <figcaption>Creation, page one of three: the four races, one of them playable in the demo.</figcaption>
-      </figure>
-      <figure>
-        <img src="art/screens/creation-class.png" alt="Character creation, class page: Bulwark, Hewer, Kindler and Snarer" width="960" height="540">
-        <figcaption>Creation, page two: class — Bulwark, Hewer, Kindler, Snarer.</figcaption>
-      </figure>
-      <figure>
-        <img src="art/screens/creation-name.png" alt="Character creation, name page: a suggested name over a letter grid used to spell your own" width="960" height="540">
-        <figcaption>Creation, page three: you are given a suggested name, and can replace it letter
-          by letter.</figcaption>
-      </figure>
-      <figure>
-        <img src="art/screens/controls.png" alt="The in-game controls reference shown on the lower display" width="960" height="540">
-        <figcaption>The in-game reference (F2), in the game's own words: the D-pad moves, A
-          interacts, and meeting a hostile creature starts battle.</figcaption>
-      </figure>
+    </div>
+
+    <h3 class="reveal" style="margin-top:4rem">Make someone to send down</h3>
+    <div class="gallery three reveal">
+      <figure class="shot"><img src="art/screens/creation-race.png" alt="Character creation: choose a race" loading="lazy" class="pixelated"><figcaption><b>Race.</b> Four races, one playable in the demo.</figcaption></figure>
+      <figure class="shot"><img src="art/screens/creation-class.png" alt="Character creation: choose a class" loading="lazy" class="pixelated"><figcaption><b>Class.</b> Bulwark, Hewer, Kindler or Snarer.</figcaption></figure>
+      <figure class="shot"><img src="art/screens/creation-name.png" alt="Character creation: enter a name" loading="lazy" class="pixelated"><figcaption><b>Name.</b> Take the suggestion or spell your own.</figcaption></figure>
     </div>
   </div>
 </section>
-<section id="creatures">
+
+<section id="battle" class="rule">
+  <div class="wrap">
+    <p class="eyebrow">Battle</p>
+    <h2 class="reveal">Aim for the leg. It will aim for yours.</h2>
+    <p class="lede reveal">Fights are turn-based and physical. You pick which part to strike, the creature does
+      the same, and what gets severed stays severed. Losing does not always mean dying.</p>
+
+    <figure class="shot battle-top reveal"><span class="label">World display · battle</span>
+      <img src="art/screens/battle-targeting.jpg" alt="A Mycelid facing the Dusk-Eyed Wolf, with the wolf's torso highlighted as the target" loading="lazy">
+      <figcaption><b>Limb targeting.</b> A Mycelid faces the Dusk-Eyed Wolf, the floor's apex predator. The highlighted part is the one you are about to strike.</figcaption>
+    </figure>
+
+    <div class="gallery reveal">
+      <figure class="shot"><span class="label">Lower display</span>
+        <img src="art/screens/battle-menu.png" alt="The battle menu with the exchange log and nine commands" loading="lazy" class="pixelated">
+        <figcaption><b>The exchange.</b> Both fighters' health, the round blow by blow, and nine commands.</figcaption>
+      </figure>
+      <figure class="shot"><span class="label">Lower display</span>
+        <img src="art/screens/battle-target.png" alt="Choosing a target, with health for head, torso and each leg" loading="lazy" class="pixelated">
+        <figcaption><b>Choose a target.</b> Every part has its own health. Body health is lethal at zero.</figcaption>
+      </figure>
+      <figure class="shot"><span class="label">Lower display</span>
+        <img src="art/screens/battle-parley.png" alt="Parley options: food, retreat, service or threat" loading="lazy" class="pixelated">
+        <figcaption><b>Parley.</b> Offer food, offer to back off, offer a service, or make a threat. A hungry creature may take the food and go.</figcaption>
+      </figure>
+      <figure class="shot"><span class="label">Lower display</span>
+        <img src="art/screens/battle-larder.png" alt="Taken to the larder: held by the old wolf, with options to sneak out, fight free or wait" loading="lazy" class="pixelated">
+        <figcaption><b>Taken to the larder.</b> Lose to a predator and it may drag you home to eat later. Sneak out, fight free, or wait.</figcaption>
+      </figure>
+    </div>
+
+    <div class="verbs reveal" aria-label="Battle commands">
+      <span class="hot">STRIKE</span><span>GUARD</span><span>OFFER</span><span>ITEMS</span><span>POWERS</span><span class="hot">SCARE</span><span class="hot">NET</span><span class="hot">PARLEY</span><span>FLEE</span>
+    </div>
+  </div>
+</section>
+
+<section id="creatures" class="rule">
   <div class="wrap">
     <p class="eyebrow">What lives down here</p>
-    <h2>Creatures with somewhere to be</h2>
-    <p class="lede">Every creature below is animated straight from the game's own sprite sheets — the same
-      frames the game draws. They eat, hunt, graze, flee and dig in a shared ecosystem that keeps
-      changing whether or not anyone is watching.</p>
+    <h2 class="reveal">Creatures with somewhere to be.</h2>
+    <p class="lede reveal">Each one is animated from the game's own sprite sheets, the same frames the game draws.</p>
 
-    <div class="grid beasts" style="margin-top:1.9rem">
-      <article class="beast">
-        <div class="beast-stage">
-          <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.4s">
-            <img src="art/creatures/mycelid-walk.png" alt="A Mycelid walking" width="384" height="96" class="pixelated">
-          </div>
-        </div>
-        <div class="beast-body">
-          <h3>The Mycelid</h3>
-          <p class="beast-role">The playable folk</p>
-          <p>Mushroom-capped people of the hollows. You start as one, and you rebuild yourself as you
-            go: head, torso and each limb can be replaced with parts taken from other creatures.</p>
-          <dl>
-            <dt>Body</dt><dd>head, torso, two arms, two legs</dd>
-            <dt>Grafts</dt><dd>raptor forelimbs, spider fangs, dusk-eye paws, aphid legs, hare hindlegs</dd>
-            <dt>Home</dt><dd>Gillhearth, on the refuge terraces</dd>
-          </dl>
-        </div>
+    <div class="creatures">
+      <article class="creature reveal">
+        <div class="stage"><div class="anim" style="--cell:96px;--n:4;--scale:1.6;--dur:.67s"><img src="art/creatures/mycelid-walk.png" alt="The Mycelid walking" width="384" height="96"></div></div>
+        <div><h3>The Mycelid</h3><p class="role">The playable folk</p>
+          <p>Mushroom-capped people of the hollows. You start as one, and you rebuild yourself as you go.</p>
+          <dl><dt>Body</dt><dd>head, torso, two arms, two legs</dd><dt>Grafts</dt><dd>raptor forelimbs, spider fangs, dusk-eye paws, aphid legs, hare hindlegs</dd><dt>Home</dt><dd>Gillhearth, on the refuge terraces</dd></dl></div>
       </article>
-
-      <article class="beast">
-        <div class="beast-stage">
-          <div class="anim" style="--cell:128px;--n:4;--scale:2;--dur:.4s">
-            <img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf walking" width="512" height="128" class="pixelated">
-          </div>
-        </div>
-        <div class="beast-body">
-          <h3>The Dusk-Eyed Wolf</h3>
-          <p class="beast-role">Apex predator</p>
-          <p>Stone-slab ridges down its back, and no predator above it. It eats anything it can catch,
-            which includes you if you are slow and alone.</p>
-          <dl>
-            <dt>Diet</dt><dd>anything</dd>
-            <dt>Preyed on by</dt><dd>nothing</dd>
-            <dt>Range</dt><dd>Wolf Run and The Ore Wolf's Den</dd>
-          </dl>
-        </div>
+      <article class="creature reveal">
+        <div class="stage"><div class="anim" style="--cell:128px;--n:4;--scale:1.25;--dur:.4s"><img src="art/creatures/old-wolf-walk.png" alt="The Dusk-Eyed Wolf walking" width="512" height="128"></div></div>
+        <div><h3>The Dusk-Eyed Wolf</h3><p class="role">Apex predator</p>
+          <p>Stone-slab ridges down its back and no predator above it. It eats anything it can catch, including you if you are slow and alone.</p>
+          <dl><dt>Diet</dt><dd>anything</dd><dt>Preyed on by</dt><dd>nothing</dd><dt>Range</dt><dd>Wolf Run and The Ore Wolf's Den</dd></dl></div>
       </article>
-
-      <article class="beast">
-        <div class="beast-stage">
-          <div class="anim" style="--cell:80px;--n:4;--scale:2;--dur:.4s">
-            <img src="art/creatures/cave-spider-walk.png" alt="A Cave Spider walking" width="320" height="80" class="pixelated">
-          </div>
-        </div>
-        <div class="beast-body">
-          <h3>Cave Spider</h3>
-          <p class="beast-role">Predator</p>
-          <p>Hunts moss slimes and glow beetles, and nests in the dark corners of the map. Its fangs are
-            worth taking if you can survive the fight.</p>
-          <dl>
-            <dt>Diet</dt><dd>moss slime, glow beetle</dd>
-            <dt>Preyed on by</dt><dd>the blind wolf</dd>
-            <dt>Useful part</dt><dd>spider fang</dd>
-          </dl>
-        </div>
+      <article class="creature reveal">
+        <div class="stage"><div class="anim" style="--cell:80px;--n:4;--scale:1.9;--dur:.4s"><img src="art/creatures/cave-spider-walk.png" alt="A Cave Spider walking" width="320" height="80"></div></div>
+        <div><h3>Cave Spider</h3><p class="role">Predator</p>
+          <p>Hunts moss slimes and glow beetles and nests in the dark corners of the map. Its fangs are worth taking if you survive the fight.</p>
+          <dl><dt>Diet</dt><dd>moss slime, glow beetle</dd><dt>Preyed on by</dt><dd>the blind wolf</dd><dt>Useful part</dt><dd>spider fang</dd></dl></div>
       </article>
-
-      <article class="beast">
-        <div class="beast-stage">
-          <div class="anim" style="--cell:96px;--n:4;--scale:2;--dur:.67s">
-            <img src="art/creatures/duskmoth-idle.png" alt="Duskmoth, a companion cat" width="384" height="96" class="pixelated">
-          </div>
-        </div>
-        <div class="beast-body">
-          <h3>Duskmoth</h3>
-          <p class="beast-role">Companion</p>
-          <p>A cat that follows you through the hollows. Feed it spore mats and it will hiss when
-            something is waiting to ambush you.</p>
-          <dl>
-            <dt>Found</dt><dd>Lantern Grove</dd>
-            <dt>Feeds on</dt><dd>spore mats</dd>
-            <dt>Ability</dt><dd>warns you of ambushes</dd>
-          </dl>
-        </div>
+      <article class="creature reveal">
+        <div class="stage"><div class="anim" style="--cell:96px;--n:6;--scale:1.6;--dur:.6s"><img src="art/creatures/duskmoth-walk.png" alt="Duskmoth the cat walking" width="576" height="96"></div></div>
+        <div><h3>Duskmoth</h3><p class="role">Companion</p>
+          <p>A cat that follows you through the hollows. Feed it spore mats and it will hiss when something is waiting to ambush you.</p>
+          <dl><dt>Found</dt><dd>Lantern Grove</dd><dt>Feeds on</dt><dd>spore mats</dd><dt>Ability</dt><dd>warns you of ambushes</dd></dl></div>
       </article>
     </div>
-
-    <p class="lede" style="margin-top:1.6rem;font-size:1rem">The demo also runs spore hares and other
-      grazers, plus a commander with her own patrol route — <b>Rundle Blackgill, Scout-Captain</b>,
-      who keeps her own memory of what she has seen and heard.</p>
+    <p class="aside-note reveal">The demo also runs spore hares and other grazers, plus a commander with her own patrol:
+      Rundle Blackgill, Scout-Captain, who keeps her own memory of what she has seen and heard.</p>
   </div>
 </section>
-<section id="world">
-  <div class="wrap">
-    <p class="eyebrow">The world</p>
-    <h2>The Fungal Hollows</h2>
-    <p class="lede">One hand-built floor, and it is big. A spider you pass on the far side of the map
-      keeps living while you walk back to camp — the ecosystem is not waiting for you.</p>
 
-    <ul class="facts" style="margin-top:1.8rem">
-      <li><b>240 × 110</b><span>tiles of map</span></li>
-      <li><b>26</b><span>named places</span></li>
-      <li><b>616</b><span>regions</span></li>
-      <li><b>324</b><span>props placed</span></li>
-      <li><b>47</b><span>forage spots</span></li>
-      <li><b>9,903</b><span>walkable tiles</span></li>
+<section id="world" class="rule">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">The world</p>
+        <h2 class="reveal">The Fungal Hollows.</h2>
+        <p class="lede reveal">One hand-built floor, and it is big. The demo starts you at Gillhearth Refuge and ends at the way down.</p>
+      </div>
+      <figure class="shot reveal"><img src="art/screens/battle-wolf.jpg" alt="A Mycelid squaring up to the Dusk-Eyed Wolf among the mushroom stands" loading="lazy"><figcaption><b>Wolf Run.</b> Some of the named places come with a resident.</figcaption></figure>
+    </div>
+    <div class="stats reveal">
+      <div><b>240 × 110</b><span>tiles of map</span></div>
+      <div><b>26</b><span>named places</span></div>
+      <div><b>616</b><span>regions</span></div>
+      <div><b>324</b><span>props placed</span></div>
+      <div><b>47</b><span>forage spots</span></div>
+      <div><b>9,903</b><span>walkable tiles</span></div>
+    </div>
+    <h3 class="reveal" style="margin-top:3.5rem">Places with names</h3>
+    <ul class="places reveal">
+      <li>Gillhearth Refuge</li><li>Elder Terrace</li><li>Lantern Rise</li><li>Crown Walk</li><li>Hollow Grove</li><li>Stalk Passage</li><li>Foragers' Walk</li><li>Gillhearth Mat Beds</li><li>The Cellar Steps</li><li>Spore Basin</li><li>Fallen Crossing</li><li>Long Roots</li><li>Compost Hollow</li><li>Driftcap Edge</li><li>The Rot Garden</li><li>Wolf Run</li><li>The Ore Wolf's Den</li><li>Drowned Threshold</li><li>The Split Crown</li><li>The Veiled Walk</li><li>The Foragers' Cairn</li><li>The Silted Beds</li><li>The Quiet Shelf</li><li>The Hollow Root</li><li>The Exposed Vein</li><li>The Claw Scar</li>
     </ul>
 
-    <h3 style="margin-top:2.4rem;color:var(--spore-bright)">Places with names</h3>
-    <p class="lede" style="font-size:1rem">Laid out by hand and named on the map. The demo starts you
-      at Gillhearth Refuge and ends at the way down.</p>
-    <ul class="places">
-      <li>Gillhearth Refuge</li><li>Elder Terrace</li><li>Lantern Rise</li><li>Crown Walk</li>
-      <li>Hollow Grove</li><li>Stalk Passage</li><li>Foragers' Walk</li><li>Gillhearth Mat Beds</li>
-      <li>The Cellar Steps</li><li>Spore Basin</li><li>Fallen Crossing</li><li>Long Roots</li>
-      <li>Compost Hollow</li><li>Driftcap Edge</li><li>The Rot Garden</li><li>Wolf Run</li>
-      <li>The Ore Wolf's Den</li><li>Drowned Threshold</li><li>The Split Crown</li><li>The Veiled Walk</li>
-      <li>The Foragers' Cairn</li><li>The Silted Beds</li><li>The Quiet Shelf</li><li>The Hollow Root</li>
-      <li>The Exposed Vein</li><li>The Claw Scar</li>
-    </ul>
+    <h3 class="reveal" style="margin-top:3.5rem">The set dressing</h3>
+    <p class="lede reveal" style="font-size:1rem">The actual props placed across the map, shown from the shipped files.</p>
+    <div class="scenery reveal">
+      <figure><img src="art/scenery/cap_hut.png" alt="" loading="lazy"><figcaption>Cap hut</figcaption></figure>
+      <figure><img src="art/scenery/stalk_arch.png" alt="" loading="lazy"><figcaption>Stalk arch</figcaption></figure>
+      <figure><img src="art/scenery/split_crown.png" alt="" loading="lazy"><figcaption>Split crown</figcaption></figure>
+      <figure><img src="art/scenery/sunken_ring.png" alt="" loading="lazy"><figcaption>Sunken ring</figcaption></figure>
+      <figure><img src="art/scenery/shelf_grove.png" alt="" loading="lazy"><figcaption>Shelf grove</figcaption></figure>
+      <figure><img src="art/scenery/forked_gill_stand.png" alt="" loading="lazy"><figcaption>Forked gill stand</figcaption></figure>
+      <figure><img src="art/scenery/fan_shelf_colony.png" alt="" loading="lazy"><figcaption>Fan shelf colony</figcaption></figure>
+      <figure><img src="art/scenery/ore_spine.png" alt="" loading="lazy"><figcaption>Ore spine</figcaption></figure>
+      <figure><img src="art/scenery/root_braid.png" alt="" loading="lazy"><figcaption>Root braid</figcaption></figure>
+      <figure><img src="art/scenery/root_bank.png" alt="" loading="lazy"><figcaption>Root bank</figcaption></figure>
+      <figure><img src="art/scenery/fallen_root.png" alt="" loading="lazy"><figcaption>Fallen root</figcaption></figure>
+      <figure><img src="art/scenery/rotted_stump.png" alt="" loading="lazy"><figcaption>Rotted stump</figcaption></figure>
+    </div>
   </div>
 </section>
 
-<section id="set-dressing">
+<section id="coop" class="rule">
   <div class="wrap">
-    <p class="eyebrow">Every pixel is in the game</p>
-    <h2>The set dressing</h2>
-    <p class="lede">Ground, hovels, root arches, mineral spikes and colonies of glow fungus —
-      the actual assets placed across the map, shown at their real size.</p>
-    <div class="scenery" style="margin-top:1.9rem">
-      <figure><img src="art/scenery/cap_hut.png" alt="Cap hut"><figcaption>Cap hut</figcaption></figure>
-      <figure><img src="art/scenery/stalk_arch.png" alt="Stalk arch"><figcaption>Stalk arch</figcaption></figure>
-      <figure><img src="art/scenery/split_crown.png" alt="Split crown"><figcaption>Split crown</figcaption></figure>
-      <figure><img src="art/scenery/sunken_ring.png" alt="Sunken ring"><figcaption>Sunken ring</figcaption></figure>
-      <figure><img src="art/scenery/shelf_grove.png" alt="Shelf grove"><figcaption>Shelf grove</figcaption></figure>
-      <figure><img src="art/scenery/forked_gill_stand.png" alt="Forked gill stand"><figcaption>Forked gill stand</figcaption></figure>
-      <figure><img src="art/scenery/fan_shelf_colony.png" alt="Fan shelf colony"><figcaption>Fan shelf colony</figcaption></figure>
-      <figure><img src="art/scenery/ore_spine.png" alt="Ore spine"><figcaption>Ore spine</figcaption></figure>
-      <figure><img src="art/scenery/root_braid.png" alt="Root braid"><figcaption>Root braid</figcaption></figure>
-      <figure><img src="art/scenery/root_bank.png" alt="Root bank"><figcaption>Root bank</figcaption></figure>
-      <figure><img src="art/scenery/fallen_root.png" alt="Fallen root"><figcaption>Fallen root</figcaption></figure>
-      <figure><img src="art/scenery/rotted_stump.png" alt="Rotted stump"><figcaption>Rotted stump</figcaption></figure>
+    <div class="split">
+      <div>
+        <p class="eyebrow">Co-op</p>
+        <h2 class="reveal">Eight players, one world.</h2>
+        <p class="lede reveal">One shared world, one set of creatures, one ecosystem. The world is computed on the
+          server and streamed to you as it changes, so your device does not need a GPU.</p>
+      </div>
+      <p class="big8 reveal" aria-hidden="true">8</p>
     </div>
-
-    <div class="grid cols-2" style="margin-top:1.6rem">
-      <figure style="margin:0;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden">
-        <img src="art/ground/hollow_floor.jpg" alt="Hollow floor ground texture" style="display:block;width:100%;height:auto" width="480" height="480">
-        <figcaption style="padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint)">Hollow floor — the ground the whole floor is tiled with.</figcaption>
-      </figure>
-      <figure style="margin:0;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden">
-        <img src="art/ground/damp_mycelium.jpg" alt="Damp mycelium ground texture" style="display:block;width:100%;height:auto" width="480" height="480">
-        <figcaption style="padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint)">Damp mycelium — the wet mats that feed the grazers.</figcaption>
-      </figure>
-    </div>
-    <p class="lede" style="font-size:.92rem;margin-top:1.2rem">Ground materials, blight and spore haze
-      are game assets too; the two above are shot from the shipped files at their native 480 × 480.</p>
-  </div>
-</section>
-<section id="coop">
-  <div class="wrap">
-    <p class="eyebrow">Co-op</p>
-    <h2>Eight players, one world</h2>
-    <p class="lede">Not eight copies of the same map — one shared world, one set of creatures, one
-      ecosystem. What another player kills stays dead. What they leave behind stays there.</p>
-
-    <div class="grid cols-3" style="margin-top:1.9rem">
-      <div class="card">
-        <p class="kicker">Join in seconds</p>
-        <h3>Install and play</h3>
-        <p>The APK already knows the server. No account, no settings, no GPU on your device — the
-          world is computed for you and streamed as it changes.</p>
-      </div>
-      <div class="card">
-        <p class="kicker">When it is busy</p>
-        <h3>You wait in a queue</h3>
-        <p>If all eight seats are taken, the game shows your position in line and lets you in the
-          moment someone leaves. Host downtime is reported separately from a full world.</p>
-      </div>
-      <div class="card">
-        <p class="kicker">Your character</p>
-        <h3>You keep what you are</h3>
-        <p>Characters are saved, including your grafts. Upgrade the app in place and you keep the
-          same character — uninstalling or clearing app storage loses it.</p>
-      </div>
+    <div class="coop">
+      <div class="card reveal"><p class="k">Join in seconds</p><h3>Install and play</h3>
+        <p>The APK already knows the server. There is no account and nothing to configure.</p></div>
+      <div class="card reveal"><p class="k">When it is busy</p><h3>You wait in a queue</h3>
+        <p>If all eight seats are taken, the game shows your place in line and lets you in when someone leaves. Host downtime is reported separately from a full world.</p></div>
+      <div class="card reveal"><p class="k">Your character</p><h3>You keep what you are</h3>
+        <p>Characters are saved, grafts included. Upgrade the app in place and you keep them. Uninstalling or clearing app storage loses them.</p></div>
     </div>
   </div>
 </section>
 
 <section id="download">
   <div class="wrap">
-    <div class="download">
+    <div class="download reveal">
       <p class="eyebrow">Get it</p>
       <h2>Download Deepwarren</h2>
-      <p class="lede" style="margin-top:.5rem">Current build <b>0.4.0-public-demo</b>. Android or a Thor
-        tablet: download the APK and open it. Android may ask you to allow installing from this source.</p>
-
+      <p class="lede">Current build <b>0.4.0-public-demo</b>. On Android or a Thor tablet, download the APK and open it.
+        Android may ask you to allow installs from this source.</p>
       <div class="dl-grid">
-        <a class="dl-item" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk">
-          <strong>Deepwarren.apk &rarr;</strong>
-          <span>Android 8+ · 168 MB · the game itself</span>
-        </a>
-        <a class="dl-item" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk.sha256">
-          <strong>Checksum &rarr;</strong>
-          <span>Verify the file you downloaded</span>
-        </a>
+        <a class="dl-item main" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk">
+          <strong>Deepwarren.apk &darr;</strong><span>Android 8+ · 168 MB · the game itself</span></a>
         <a class="dl-item" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Windows-Setup.zip">
-          <strong>Windows setup &rarr;</strong>
-          <span>Runs it in an emulator · needs Android Studio</span>
-        </a>
+          <strong>Windows setup</strong><span>Runs it in an emulator · needs Android Studio</span></a>
         <a class="dl-item" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Mac-Setup.zip">
-          <strong>Mac setup &rarr;</strong>
-          <span>Experimental · not yet verified on a real Mac</span>
-        </a>
+          <strong>Mac setup</strong><span>Experimental · not yet verified on a real Mac</span></a>
       </div>
-
-      <p class="hash"><b>SHA-256 of the current APK</b>d8f82081b5469953770ea88b5790f9c9140ed3baf4cf48b0c01b079c612eea08</p>
-
-      <p style="margin-top:1.3rem;font-size:.94rem;color:var(--ink-soft)">
-        Step-by-step instructions, including what to do if Windows blocks the downloaded script, are in
-        the <a href="https://github.com/phippsrtyler/deepwarren-demo#windows-and-mac">setup guide</a>,
-        and every build is listed under
-        <a href="https://github.com/phippsrtyler/deepwarren-demo/releases">Releases</a>.</p>
+      <p class="hash"><b>SHA-256 of the current APK · <a href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk.sha256">checksum file</a></b>d8f82081b5469953770ea88b5790f9c9140ed3baf4cf48b0c01b079c612eea08</p>
+      <p style="margin-top:1.3rem;font-size:.94rem;color:var(--ink-soft)">Step-by-step instructions, including what to do if Windows blocks the
+        downloaded script, are in the <a href="https://github.com/phippsrtyler/deepwarren-demo#windows-and-mac">setup guide</a>.
+        Every build is listed under <a href="https://github.com/phippsrtyler/deepwarren-demo/releases">Releases</a>.</p>
     </div>
   </div>
 </section>
-<section id="controls">
+
+<section id="controls" class="rule">
   <div class="wrap">
     <p class="eyebrow">Keyboard</p>
-    <h2>Controls</h2>
-    <p class="lede" style="font-size:1rem">The same bindings work on a tablet's touch controls; the
-      keys below are the emulator bindings.</p>
-    <ul class="keys">
-      <li><kbd>WASD</kbd> <kbd>&larr;&uarr;&darr;&rarr;</kbd> <span>Move and navigate</span></li>
-      <li><kbd>E</kbd> <span>Interact</span></li>
-      <li><kbd>R</kbd> <span>Rest</span></li>
-      <li><kbd>C</kbd> <span>Cook</span></li>
-      <li><kbd>Tab</kbd> <span>Field book</span></li>
-      <li><kbd>Esc</kbd> <span>Pause or go back</span></li>
-      <li><kbd>1</kbd> <span>Limb targeting in battle</span></li>
-      <li><kbd>Enter</kbd> <span>Strike</span></li>
-      <li><kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <span>Guard · feed · flee</span></li>
-      <li><kbd>F1</kbd> <span>In-game help and controls</span></li>
-      <li><kbd>F2</kbd> <span>Inspect the lower-screen reference</span></li>
-      <li><kbd>F12</kbd> <span>Take a picture</span></li>
+    <h2 class="reveal">Controls</h2>
+    <p class="lede reveal">These are the emulator bindings. A tablet's own buttons do the same things.</p>
+    <ul class="keys reveal">
+      <li><span class="ks"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>Move and navigate</li>
+      <li><span class="ks"><kbd>E</kbd></span>Interact</li>
+      <li><span class="ks"><kbd>R</kbd></span>Rest</li>
+      <li><span class="ks"><kbd>C</kbd></span>Cook</li>
+      <li><span class="ks"><kbd>Tab</kbd></span>Field book</li>
+      <li><span class="ks"><kbd>Esc</kbd></span>Pause or go back</li>
+      <li><span class="ks"><kbd>1</kbd></span>Limb targeting in battle</li>
+      <li><span class="ks"><kbd>Enter</kbd></span>Strike</li>
+      <li><span class="ks"><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></span>Guard · feed · flee</li>
+      <li><span class="ks"><kbd>F1</kbd></span>In-game help and controls</li>
+      <li><span class="ks"><kbd>F2</kbd></span>Lower-screen reference</li>
+      <li><span class="ks"><kbd>F12</kbd></span>Take a picture</li>
     </ul>
-    <p class="lede" style="font-size:.94rem;margin-top:1.1rem">Click the lower game display first if the
-      emulator has lost keyboard focus.</p>
+    <p class="aside-note">Arrow keys also move. Click the lower game display first if the emulator has lost keyboard focus.</p>
   </div>
 </section>
 
-<section id="status">
+<section id="status" class="rule">
   <div class="wrap">
     <p class="eyebrow">Straight answers</p>
-    <h2>What works, and what we have not proven</h2>
-    <p class="lede" style="font-size:1rem">This is an early demo. We would rather tell you the limits
-      than have you find them.</p>
-    <ul class="status">
-      <li><span class="dot dot-ok"></span><span><b>Eight seats, queueing, saves.</b> Enforced by the
-        live server and tested with players joining, waiting and being admitted.</span></li>
-      <li><span class="dot dot-warn"></span><span><b>Eight-player load is measured on a local rig, not
-        over the open internet.</b> The four-player measurement over the real network came in at
-        247&nbsp;ms against a 250&nbsp;ms budget, so busy-world performance at eight is not yet proven
-        in the wild.</span></li>
-      <li><span class="dot dot-warn"></span><span><b>macOS is unverified.</b> The Mac launcher exists but
-        has never been run on a physical Mac.</span></li>
-      <li><span class="dot dot-warn"></span><span><b>A fresh Windows installation has not been
-        fully verified</b> end to end.</span></li>
-      <li><span class="dot dot-info"></span><span><b>The world runs on one PC</b> belonging to the
-        developer, so the demo is online when that machine is. It is not a continuously available
-        service, and there is no schedule or uptime promise.</span></li>
-      <li><span class="dot dot-info"></span><span><b>If the host is down you will see that separately
-        from a full server</b> — you are not stuck in a queue for an offline world.</span></li>
+    <h2 class="reveal">What works, and what we have not proven.</h2>
+    <p class="lede reveal">This is an early demo. We would rather tell you the limits than have you find them.</p>
+    <ul class="honest reveal">
+      <li class="ok"><b>Eight seats, queueing and saves</b> are enforced by the live server and tested with players joining, waiting and being admitted.</li>
+      <li><b>Eight-player load was measured on a local rig</b>, not over the open internet. Four players over the real network came in at 247 ms against a 250 ms budget, so eight in the wild is not yet proven.</li>
+      <li><b>macOS is unverified.</b> The Mac launcher exists but has never been run on a physical Mac.</li>
+      <li><b>A fresh Windows install</b> has not been fully verified end to end.</li>
+      <li><b>The world runs on the developer's own PC.</b> The demo is online when that machine is. There is no schedule or uptime promise.</li>
+      <li class="ok"><b>If the host is down, you are told so.</b> You are never left waiting in a queue for an offline world.</li>
     </ul>
-  </div>
-</section>
-
-<section id="about">
-  <div class="wrap">
-    <p class="eyebrow">What this is</p>
-    <h2>A world that keeps its own books</h2>
-    <p class="lede">Deepwarren is a co-operative survival crawl through a fungal underworld. The
-      creatures, the factions and the roaming commanders are run by a simulation that keeps going
-      between your visits — it remembers, it decays, it spreads, and it changes what waits for you
-      next time.</p>
-    <p class="lede" style="font-size:1rem">The demo shows one floor of it. What you see on this page
-      is built from the game's own art files, frame for frame — including the animations, which are
-      the real sprite rows the game plays.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <div class="foot-brand">
-      <img src="art/creatures/mycelid-portrait.png" alt="" class="pixelated" width="41" height="63">
-      <strong>Deepwarren</strong>
+    <div>
+      <a class="brand" href="#top"><img src="art/creatures/mycelid-portrait.png" alt="" class="pixelated">Deepwarren</a>
+      <p style="margin-top:1rem">Free online co-op Android demo.</p>
+      <p><a href="https://github.com/phippsrtyler/deepwarren-demo">Repository &amp; instructions</a> · <a href="https://github.com/phippsrtyler/deepwarren-demo/releases">All releases</a> · <a href="https://github.com/phippsrtyler/deepwarren-demo/issues">Report a problem</a></p>
     </div>
-    <p>Free online co-op Android demo. The demo is online while the developer's host machine is running;
-      we do not promise uptime.</p>
-    <p>This site distributes the demo. The game's source code stays private. The sprites and scenery
-      shown on this page are exported from the game's own art files so you can see what you are
-      downloading: they remain the owner's property and are not licensed for reuse or redistribution.</p>
-    <p>Report problems with the build number, your device, what you expected and what happened on the
-      <a href="https://github.com/phippsrtyler/deepwarren-demo/issues">Issues page</a>. Please do not
-      post credentials or save files.</p>
-    <p><a href="https://github.com/phippsrtyler/deepwarren-demo">Repository &amp; instructions</a> ·
-      <a href="https://github.com/phippsrtyler/deepwarren-demo/releases">All releases</a></p>
+    <div>
+      <p>This site distributes the demo. The game's source code stays private. The sprites, scenery and screenshots on this
+        page come from the game's own files and the released build. They remain the owner's property and are not licensed
+        for reuse or redistribution.</p>
+      <p>When reporting a problem, include the build number, your device, what you expected and what happened. Please do not
+        post credentials or save files.</p>
+    </div>
   </div>
 </footer>
 
-
-
-
-
+<script>
+(function(){
+  var nav=document.getElementById('nav');
+  addEventListener('scroll',function(){nav.classList.toggle('scrolled',scrollY>20)},{passive:true});
+  var sp=document.getElementById('spores');
+  for(var i=0;i<26;i++){var s=document.createElement('i');s.style.left=(Math.random()*100)+'%';s.style.top=(55+Math.random()*45)+'%';
+    s.style.animationDelay=(-Math.random()*14)+'s';s.style.animationDuration=(10+Math.random()*10)+'s';sp.appendChild(s)}
+  var els=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){io.observe(el)});
+  } else els.forEach(function(el){el.classList.add('in')});
+  document.querySelectorAll('.shot img').forEach(function(img){
+    img.addEventListener('click',function(){
+      var lb=document.createElement('div');lb.className='lb';lb.setAttribute('role','dialog');lb.setAttribute('aria-label','Enlarged screenshot');
+      var big=img.cloneNode();big.removeAttribute('loading');lb.appendChild(big);
+      var cap=img.closest('figure').querySelector('figcaption');if(cap){var p=document.createElement('p');p.textContent=cap.textContent;lb.appendChild(p)}
+      function close(){lb.remove();removeEventListener('keydown',key)}
+      function key(e){if(e.key==='Escape')close()}
+      lb.addEventListener('click',close);addEventListener('keydown',key);document.body.appendChild(lb);
+    });
+  });
+})();
+</script>
 </body>
 </html>
