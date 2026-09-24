@@ -8,7 +8,7 @@
 <meta property="og:title" content="Deepwarren — free online co-op Android demo">
 <meta property="og:description" content="Eight players, one shared fungal underworld. No GPU, no account, no setup — just install and play.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="art/creatures/old-wolf-battle.png">
+<meta property="og:image" content="art/screens/overworld.png">
 <link rel="icon" href="art/creatures/mycelid-portrait.png">
 <style>
 :root{
@@ -218,6 +218,17 @@ section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
    only matters on narrow screens, where max-width clamps the image and
    nearest-neighbour would drop entire pixel rows (that reads as broken art). */
 .scenery img{height:auto;width:auto;max-width:100%;display:block;image-rendering:auto}
+/* ---------- screenshot gallery (frames captured off the released APK) ---------- */
+.shots{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:1.1rem}
+.shots figure{
+  margin:0;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#0e1817,#0b1312);
+  border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;
+}
+.shots img{display:block;width:100%;height:auto}
+.shots figcaption{padding:.7rem .9rem;font-size:.82rem;color:var(--ink-faint);border-top:1px solid var(--line-soft)}
+.shots figcaption b{color:var(--ink-soft)}
+.shots .wide{grid-column:1/-1}
 /* ---------- download ---------- */
 .download{
   background:
@@ -329,6 +340,54 @@ footer a{color:var(--ink-soft)}
     </div>
   </div>
 </header>
+<section id="shots">
+  <div class="wrap">
+    <p class="eyebrow">Captured from the released build</p>
+    <h2>What you actually get</h2>
+    <p class="lede">Every frame below is a screenshot of the released APK running on the demo's own
+      virtual device — no mock-ups. The wide frame is the world display; the square ones are the
+      lower display, a real second screen the launcher sets up for you.</p>
+
+    <div class="shots">
+      <figure class="wide">
+        <img src="art/screens/overworld.png" alt="The Fungal Hollows on the world display: cap huts, gill stands and mushroom-capped walkers in camp, with a cave spider on the path east" width="1920" height="1080">
+        <figcaption>The Fungal Hollows on the world display — Gillhearth's camp hut is lettered on
+          the ground itself, and the mushroom-capped walkers keep their own routes instead of
+          standing around for you.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/field-map.png" alt="The lower display while exploring: vitals, provisions, phase meter and the field map of everywhere this character has walked" width="960" height="540">
+        <figcaption>The lower display while exploring: vitals, provisions, the phase meter, and the
+          field map of what this character has actually walked. The tabs along the bottom are where
+          the whole interface lives.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/director.png" alt="The Director panel: source hosted, twelve effects applied to the world, the council's last decision and a commander's suspicions" width="960" height="540">
+        <figcaption>The Director panel mid-run — <b>source: hosted</b>, twelve effects applied to the
+          world, the council's last decision, and a commander's suspicions about your route and
+          party size.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/creation-race.png" alt="Character creation, race page: four races listed, three marked unavailable" width="960" height="540">
+        <figcaption>Creation, page one of three: the four races, one of them playable in the demo.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/creation-class.png" alt="Character creation, class page: Bulwark, Hewer, Kindler and Snarer" width="960" height="540">
+        <figcaption>Creation, page two: class — Bulwark, Hewer, Kindler, Snarer.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/creation-name.png" alt="Character creation, name page: a suggested name over a letter grid used to spell your own" width="960" height="540">
+        <figcaption>Creation, page three: you are given a suggested name, and can replace it letter
+          by letter.</figcaption>
+      </figure>
+      <figure>
+        <img src="art/screens/controls.png" alt="The in-game controls reference shown on the lower display" width="960" height="540">
+        <figcaption>The in-game reference (F2), in the game's own words: the D-pad moves, A
+          interacts, and meeting a hostile creature starts battle.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
 <section id="creatures">
   <div class="wrap">
     <p class="eyebrow">What lives down here</p>

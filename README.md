@@ -14,6 +14,21 @@ The host runs on the developer's PC and must be online; this is an early demo, n
 from the game's own art, the world at a glance, and a plain statement of what the demo does and does
 not yet prove.
 
+## Screenshots
+
+Captured from this build on the demo's own virtual device. The wide frame is the world display; the
+others are the lower display, which is a real second screen the launcher configures for you.
+
+![The Fungal Hollows on the world display](art/screens/overworld.png)
+
+| The lower display while exploring | The Director panel mid-run |
+| --- | --- |
+| ![Vitals, provisions and the field map](art/screens/field-map.png) | ![The hosted director's intent, effects and council](art/screens/director.png) |
+
+| Creating a character | The in-game reference (F2) |
+| --- | --- |
+| ![Choosing a race, class and name](art/screens/creation-name.png) | ![The controls, in the game's own words](art/screens/controls.png) |
+
 ## Android / Thor
 
 Download the APK from Releases and open it on your device. Android may ask you to allow this
