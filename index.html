@@ -133,6 +133,11 @@ section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
 .scenery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-top:2rem}
 .scenery figure{margin:0;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:1rem;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:190px}
 .scenery img{max-height:140px;width:auto}
+.anim-grid figure{min-height:220px}.anim-grid img{max-height:180px;image-rendering:pixelated}
+.tracks{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:2rem}
+.track{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:1rem}
+.track p{margin:0 0 .6rem;display:flex;flex-direction:column}.track span{font-size:.82rem;color:var(--ink-dim)}
+.track audio{width:100%}
 .scenery figcaption{font-size:.78rem;color:var(--ink-dim);margin-top:.7rem}
 
 .coop{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3rem}
@@ -193,6 +198,8 @@ footer p+p{margin-top:.8rem}
       <li><a href="#battle">Battle</a></li>
       <li><a href="#creatures">Creatures</a></li>
       <li><a href="#world">World</a></li>
+      <li><a href="#galleries">Floor 4</a></li>
+      <li><a href="#music">Music</a></li>
       <li><a href="#coop">Co-op</a></li>
       <li><a href="#status">Status</a></li>
     </ul>
@@ -293,13 +300,21 @@ footer p+p{margin-top:.8rem}
     <p class="eyebrow">Battle</p>
     <h2 class="reveal">Aim for the leg. It will aim for yours.</h2>
     <p class="lede reveal">Fights are turn-based and physical. You pick which part to strike, and the creature does
-      the same. A part beaten to zero goes black and stops working: a dead leg slows you, a dead arm weakens your
+      the same. A part beaten to zero turns purple-black and stops working: a dead leg slows you, a dead arm weakens your
       blows. It mends over time, or you can bandage it mid-fight. Losing does not always mean dying.</p>
 
     <figure class="shot battle-top reveal"><span class="label">World display · battle</span>
-      <img src="art/screens/battle-disabled-limb.jpg" alt="A Mycelid facing a Cave Spider whose front leg has turned black" loading="lazy">
-      <figcaption><b>A disabled leg.</b> The Mycelid struck one Cave Spider leg until it gave out. It stays on the body, black and useless, and the spider is slower for it.</figcaption>
+      <img src="art/screens/battle-disabled-limb.jpg" alt="A Mycelid facing a Cave Spider whose leg has turned purple-black" loading="lazy">
+      <figcaption><b>A disabled leg.</b> The Mycelid struck one Cave Spider leg until it gave out. It stays on the body, purple-black and useless, and the spider is slower for it. Combat never cuts a limb off.</figcaption>
     </figure>
+
+    <h3 class="reveal" style="margin-top:3.5rem">In motion</h3>
+    <p class="lede reveal" style="font-size:1rem">Screen recordings of the released game connected to the server. They aren't sped up or edited, just trimmed.</p>
+    <div class="gallery three reveal">
+      <figure class="shot"><img src="art/gifs/combat-encounter.gif" alt="A Mycelid walks into a Cave Spider and the battle opens" loading="lazy"><figcaption><b>Contact.</b> Walk into something hostile and the fight starts where you stand.</figcaption></figure>
+      <figure class="shot"><img src="art/gifs/combat-limb-strike.gif" alt="Aiming at the spider's leg until it turns purple-black" loading="lazy"><figcaption><b>Aimed strikes.</b> Picking a leg and hitting it until it turns purple-black and gives out.</figcaption></figure>
+      <figure class="shot"><img src="art/gifs/combat-finish.gif" alt="The final exchanges and the spider's death" loading="lazy"><figcaption><b>The finish.</b> A slowed spider is easier to put down.</figcaption></figure>
+    </div>
 
     <div class="gallery reveal">
       <figure class="shot"><span class="label">Lower display</span>
@@ -364,6 +379,24 @@ footer p+p{margin-top:.8rem}
     </div>
     <p class="aside-note reveal">The demo also runs spore hares and other grazers, plus a commander with her own patrol:
       Rundle Blackgill, Scout-Captain, who keeps her own memory of what she has seen and heard.</p>
+
+    <h3 class="reveal" style="margin-top:3.5rem">Every finished animation</h3>
+    <p class="lede reveal" style="font-size:1rem">Played from the shipped sprite sheets, frame for frame: walks, battle stances, attacks and deaths.
+      The passage opens and closes the way it does in the game. Creatures still drawn as placeholders are left out.</p>
+    <div class="scenery anim-grid reveal">
+      <figure><img src="art/anim/cave_spider-walk.gif" alt="" loading="lazy" class="pixelated"><figcaption>Cave Spider · walk</figcaption></figure>
+      <figure><img src="art/anim/cave_spider-battle.gif" alt="" loading="lazy" class="pixelated"><figcaption>Cave Spider · stance &amp; bite</figcaption></figure>
+      <figure><img src="art/anim/cave_spider-death.gif" alt="" loading="lazy" class="pixelated"><figcaption>Cave Spider · death</figcaption></figure>
+      <figure><img src="art/anim/mycelid-walk.gif" alt="" loading="lazy" class="pixelated"><figcaption>Mycelid · walk</figcaption></figure>
+      <figure><img src="art/anim/mycelid-battle.gif" alt="" loading="lazy" class="pixelated"><figcaption>Mycelid · stance &amp; strike</figcaption></figure>
+      <figure><img src="art/anim/mycelid-death.gif" alt="" loading="lazy" class="pixelated"><figcaption>Mycelid · death</figcaption></figure>
+      <figure><img src="art/anim/old_wolf-walk.gif" alt="" loading="lazy" class="pixelated"><figcaption>Dusk-Eyed Wolf · walk</figcaption></figure>
+      <figure><img src="art/anim/old_wolf-battle.gif" alt="" loading="lazy" class="pixelated"><figcaption>Dusk-Eyed Wolf · stance &amp; lunge</figcaption></figure>
+      <figure><img src="art/anim/old_wolf-death.gif" alt="" loading="lazy" class="pixelated"><figcaption>Dusk-Eyed Wolf · death</figcaption></figure>
+      <figure><img src="art/anim/cat_duskmoth-walk.gif" alt="" loading="lazy" class="pixelated"><figcaption>Duskmoth · walk</figcaption></figure>
+      <figure><img src="art/anim/cat_dewclaw-walk.gif" alt="" loading="lazy" class="pixelated"><figcaption>Dewclaw · walk</figcaption></figure>
+      <figure><img src="art/anim/passage-gill_tube.gif" alt="" loading="lazy" class="pixelated"><figcaption>Gill tube passage · opening</figcaption></figure>
+    </div>
   </div>
 </section>
 
@@ -409,6 +442,58 @@ footer p+p{margin-top:.8rem}
   </div>
 </section>
 
+<section id="galleries" class="rule">
+  <div class="wrap">
+    <p class="eyebrow">Below the hollows</p>
+    <h2 class="reveal">The Chitin Galleries.</h2>
+    <p class="lede reveal">The next floor down is an ant colony that farms: nursery courts, brood vaults, a queen's chamber
+      and aphid folds worked by the galleries' own castes. In this demo, the guarded descent at the east end of the Hollows
+      is where your run finishes. Beat the Dusk-Eyed Wolf and the way down opens.</p>
+    <div class="device reveal">
+      <figure class="shot"><span class="label">World display · captured in game</span>
+        <img src="art/floor4/hollows-mouth.jpg" alt="The gill-tube mouth of the descent, at the east end of the Fungal Hollows" loading="lazy">
+        <figcaption><b>The guarded descent.</b> The gill-tube mouth at the east end of the Hollows. Once the wolf is dead, stepping in ends the demo run.</figcaption>
+      </figure>
+      <div class="stack">
+        <figure class="shot"><span class="label">Lower display</span>
+          <img src="art/floor4/guarded-descent.png" alt="The Guarded Descent prompt: stay or descend" loading="lazy" class="pixelated">
+          <figcaption><b>Stay or descend.</b> Leaving the floor is a separate choice.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <h3 class="reveal" style="margin-top:3.5rem">Rooms of the galleries</h3>
+    <p class="lede reveal" style="font-size:1rem">Room art from the Floor 4 export, with each room's layers composited. It's still being
+      laid out: these rooms aren't open to walk in yet.</p>
+    <div class="gallery reveal">
+      <figure class="shot"><img src="art/floor4/queens_chamber.jpg" alt="The queen's chamber: a resin floor ringed by carved chitin vaults" loading="lazy"><figcaption><b>Queen's Chamber.</b></figcaption></figure>
+      <figure class="shot"><img src="art/floor4/nursery_court.jpg" alt="The nursery court under an arched chitin ceiling" loading="lazy"><figcaption><b>Nursery Court.</b></figcaption></figure>
+      <figure class="shot"><img src="art/floor4/brood_vault.jpg" alt="The brood vault, walled in ribbed chitin" loading="lazy"><figcaption><b>Brood Vault.</b></figcaption></figure>
+      <figure class="shot"><img src="art/floor4/rent_common.jpg" alt="The rent common, a wide amber floor inside dark chitin walls" loading="lazy"><figcaption><b>Rent Common.</b></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="music" class="rule">
+  <div class="wrap">
+    <p class="eyebrow">Music</p>
+    <h2 class="reveal">An orchestra from a sound card.</h2>
+    <p class="lede reveal">The score is written for the General MIDI orchestra of 80s and 90s SNES and DOS games: strings, brass,
+      timpani and harp, all thin and bright the way that hardware sounded. Every place and every fight has its own cue.
+      These are the tracks that ship in the game.</p>
+    <div class="tracks reveal">
+      <div class="track"><p><b>Title</b><span>The main menu.</span></p><audio controls preload="none" src="music/title.mp3"></audio></div>
+      <div class="track"><p><b>Overworld</b><span>The open paths: Lantern Rise, Crown Walk, Stalk Passage and the rest of the Hollows.</span></p><audio controls preload="none" src="music/overworld.mp3"></audio></div>
+      <div class="track"><p><b>Battle</b><span>Fights in most of the Hollows.</span></p><audio controls preload="none" src="music/battle.mp3"></audio></div>
+      <div class="track"><p><b>Battle, deep variation</b><span>Fights among the roots and the ore.</span></p><audio controls preload="none" src="music/battle_variation.mp3"></audio></div>
+      <div class="track"><p><b>Camp</b><span>Gillhearth Refuge, Elder Terrace and the Mat Beds. It also plays when your run ends.</span></p><audio controls preload="none" src="music/camp.mp3"></audio></div>
+      <div class="track"><p><b>Grove</b><span>Hollow Grove, Spore Basin, the Rot Garden and the other growing places.</span></p><audio controls preload="none" src="music/grove.mp3"></audio></div>
+      <div class="track"><p><b>Ore</b><span>The Ore Wolf's Den, Drowned Threshold and the mineral veins.</span></p><audio controls preload="none" src="music/ore.mp3"></audio></div>
+      <div class="track"><p><b>Roots</b><span>Long Roots, Fallen Crossing and Wolf Run.</span></p><audio controls preload="none" src="music/roots.mp3"></audio></div>
+      <div class="track"><p><b>Defeat</b><span>When a fight goes against you.</span></p><audio controls preload="none" src="music/defeat.mp3"></audio></div>
+    </div>
+  </div>
+</section>
+
 <section id="coop" class="rule">
   <div class="wrap">
     <div class="split">
@@ -446,7 +531,7 @@ footer p+p{margin-top:.8rem}
         <a class="dl-item" href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Mac-Setup.zip">
           <strong>Mac setup</strong><span>Double-click setup · not yet tested on a real Mac</span></a>
       </div>
-      <p class="hash"><b>SHA-256 of the current APK · <a href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk.sha256">checksum file</a></b>eeed175499688575be55cee7e319b742ecc965f009cc68168f7418e0465a90eb</p>
+      <p class="hash"><b>SHA-256 of the current APK · <a href="https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk.sha256">checksum file</a></b>94f41e388fd78cc601027ba1528ec05a74da5b8890315a9f874a6bdd2f98c8d0</p>
       <p style="margin-top:1.3rem;font-size:.94rem;color:var(--ink-soft)">Step-by-step instructions, including what to do if Windows blocks the
         downloaded script, are in the <a href="https://github.com/phippsrtyler/deepwarren-demo#windows-and-mac">setup guide</a>.
         Every build is listed under <a href="https://github.com/phippsrtyler/deepwarren-demo/releases">Releases</a>.</p>
