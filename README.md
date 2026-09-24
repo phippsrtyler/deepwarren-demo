@@ -1,78 +1,83 @@
 # Deepwarren
 
-Free online co-op Android demo. The game connects to our hosted world automatically; you do not
-need a GPU server, model download, VPN, or account with a model provider.
+Free online co-op demo. Up to **eight players** share one living world, and there's a queue when it's full.
+No account, no GPU and no server setup: the game connects to our hosted world by itself.
 
-**[Download the Android APK](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk)** | [Windows setup](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Windows-Setup.zip) | [Mac setup (experimental)](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Mac-Setup.zip)
+**[Download for Android](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren.apk)** ·
+[Windows setup](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Windows-Setup.zip) ·
+[Mac setup](https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download/Deepwarren-Mac-Setup.zip)
 
-The demo allows **eight simultaneous players** in one shared world, with a waiting queue.
-Current build: **0.4.0-public-demo (versionCode 10)**. Verify your download against
-`Deepwarren.apk.sha256`, published with each release.
-The host runs on the developer's PC and must be online; this is an early demo, not a continuously available service.
+The world runs on the developer's own PC, so the demo is online when that PC is. If it's offline,
+the game tells you so instead of leaving you in the queue.
 
-[See the demo page](https://phippsrtyler.github.io/deepwarren-demo/) — creature sprites animated
-from the game's own art, the world at a glance, and a plain statement of what the demo does and does
-not yet prove.
+## Android phone or tablet (AYN Thor, etc.)
 
-## Screenshots
+1. Tap **Download for Android** above.
+2. Open the downloaded `Deepwarren.apk`. If Android asks, allow installs from your browser.
+3. Open Deepwarren and play.
 
-Captured from this build on the demo's own virtual device. The wide frame is the world display; the
-others are the lower display, which is a real second screen the launcher configures for you.
+To update, install the new APK over the old one. Your character is kept. Uninstalling the app
+or clearing its storage loses your character.
 
-![The Fungal Hollows on the world display](art/screens/overworld.png)
+## Windows
 
-| The lower display while exploring | The Director panel mid-run |
-| --- | --- |
-| ![Vitals, provisions and the field map](art/screens/field-map.png) | ![The hosted director's intent, effects and council](art/screens/director.png) |
+1. Download **Windows setup** and open the ZIP. Click **Extract all**.
+2. In the extracted folder, double-click **Play Deepwarren**.
+   - If Windows shows "Windows protected your PC", click **More info**, then **Run anyway**.
+3. When Google's licence terms appear, read each one and type **y** then Enter.
+4. Wait. The first run downloads about 3 GB and takes 15-30 minutes. The window shows each step.
 
-| Creating a character | The in-game reference (F2) |
-| --- | --- |
-| ![Choosing a race, class and name](art/screens/creation-name.png) | ![The controls, in the game's own words](art/screens/controls.png) |
+The game opens in two windows: the big one is the world, and the smaller one holds menus,
+inventory and battle choices. Next time, open **Deepwarren** from the Start menu. It updates
+the game by itself and starts in a minute or two.
 
-## Android / Thor
+If it says **hardware virtualization is off**: press Start, type *Turn Windows features on or off*,
+tick **Windows Hypervisor Platform**, click OK and restart your PC. Then run Deepwarren again.
+Some PCs also need virtualization (Intel VT-x or AMD SVM) switched on in the BIOS.
 
-Download the APK from Releases and open it on your device. Android may ask you to allow this
-download source to install applications. Keep the same installation to retain your character.
-Internet access and an available host are required. When the server is full, wait in the queue;
-your character is saved when you leave. Host downtime is shown separately from a full server.
+## Mac
 
-## Windows and Mac
+1. Download **Mac setup** and double-click the ZIP to unpack it.
+2. Right-click **Play-Deepwarren** and choose **Open**, then **Open** again. (macOS asks this once
+   because the file came from the internet.)
+3. When Google's licence terms appear, read each one and type **y** then Return.
+4. Wait. The first run downloads about 3 GB and takes 15-30 minutes.
 
-Install [Android Studio](https://developer.android.com/studio) once (no project creation needed),
-then run the appropriate Deepwarren launcher supplied with the release. The launcher uses
-Studio's Java runtime, downloads Google's emulator tools, asks you to review Google's SDK
-licences, creates a dedicated Deepwarren virtual device, installs the APK, and starts the game.
-First setup downloads several GB; subsequent launches reuse the installed tools and device.
+Next time, double-click **Play-Deepwarren** again. It works on Apple Silicon and Intel Macs.
+The Mac setup has not yet been tested on a physical Mac, so please report anything that goes wrong.
 
-The guided launchers are experimental; a fresh Windows installation has not been fully verified,
-and macOS has not yet been verified on a physical Mac. Apple Silicon requires the ARM64 image; Intel Macs use x86_64.
-See Google's [system requirements](https://developer.android.com/studio/install).
+## What the setup does
 
-The game and menus use separate displays. The setup configures both; a second physical monitor
-is not necessary. Click the lower game window for mouse/touch input. Use **WASD or arrow keys** to move/navigate, **Enter or E** to select/interact,
-**Escape** to go back/pause, and **F2** for the in-game controls reference. You can also click
-choices on the lower display. Click a game display first if the emulator has no keyboard focus.
+It downloads a small Java runtime, Google's official Android emulator tools and an Android system image.
+Every download is checked against a known checksum. It creates a dedicated "Deepwarren" emulator,
+installs the newest game and starts it. Everything lives in its own folder, so it never touches
+another Android setup you may have:
 
-### Launching the downloaded setup
+- Windows: `%LOCALAPPDATA%\Deepwarren`
+- Mac: `~/Library/Application Support/Deepwarren`
 
-Extract the whole setup ZIP before running it. On Windows, open PowerShell in the extracted
-folder and run `powershell -NoProfile -ExecutionPolicy RemoteSigned -File .\Play-Deepwarren.ps1`.
-This policy applies only to that process. If Windows blocks the downloaded script, review it,
-then use its Properties dialog's **Unblock** checkbox before running it. Do not disable your
-computer's security settings globally.
+It changes no system settings. Android Studio is not needed. If you already have it, the setup
+uses Android Studio's Java instead of downloading its own. You need about 8 GB of free disk space
+and 8 GB of RAM.
 
-On Mac, open `Play-Deepwarren.command` in the extracted folder. If macOS asks you to review
-an internet download, use Finder's **Open** action after checking its source. The launcher never
-changes Gatekeeper settings. Mac instructions remain unverified on physical hardware.
+Your character lives in the Deepwarren emulator. Keep it. To remove everything, delete the folder above.
 
-Keep the Deepwarren virtual device: deleting it or clearing the app's storage removes its
-installation identity, so it cannot automatically recover the same character. Re-running the
-launcher updates the existing app without clearing its storage.
+## Controls
 
-## Support
+| Key | Action |
+|---|---|
+| WASD / arrow keys | Move and navigate menus |
+| E or Enter | Select, interact |
+| Esc | Back, pause |
+| 1 | Aim at a limb in battle |
+| F1 | Help |
+| F2 | Full controls on the lower screen |
 
-Report the version, device/emulator, what you expected, and what happened using this repository's
-Issues page. Do not post credentials or private save files. This repository distributes the demo; it
-does not contain the game's private source code. The art under `art/` is exported from the game's own
-asset files so the demo page can show what the download contains; it remains the owner's property and
-is not licensed for reuse or redistribution.
+Click a game window once if the keyboard doesn't respond. You can also click choices in the smaller window.
+
+## Problems
+
+Open an issue on this repository. Include what you were doing, what you expected and what happened.
+Mention your device, or Windows/Mac version. Please don't post passwords or save files.
+
+This repository distributes the demo. It doesn't contain or license the game's source code or art.
