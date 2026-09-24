@@ -23,6 +23,7 @@
           "anim": "idle",
           "dir": "e",
           "frames": 4,
+          "sourceFrames": 4,
           "fps": 8.5714,
           "file": "art/creatures/mycelid-idle.png",
           "cellPx": 96
@@ -30,7 +31,8 @@
         {
           "anim": "walk",
           "dir": "e",
-          "frames": 6,
+          "frames": 4,
+          "sourceFrames": 6,
           "fps": 10,
           "file": "art/creatures/mycelid-walk.png",
           "cellPx": 96
@@ -71,6 +73,7 @@
           "anim": "idle",
           "dir": "e",
           "frames": 4,
+          "sourceFrames": 4,
           "fps": 6,
           "file": "art/creatures/old-wolf-idle.png",
           "cellPx": 128
@@ -78,7 +81,8 @@
         {
           "anim": "walk",
           "dir": "e",
-          "frames": 6,
+          "frames": 4,
+          "sourceFrames": 6,
           "fps": 10,
           "file": "art/creatures/old-wolf-walk.png",
           "cellPx": 128
@@ -119,6 +123,7 @@
           "anim": "idle",
           "dir": "e",
           "frames": 4,
+          "sourceFrames": 4,
           "fps": 6,
           "file": "art/creatures/cave-spider-idle.png",
           "cellPx": 80
@@ -126,7 +131,8 @@
         {
           "anim": "walk",
           "dir": "e",
-          "frames": 6,
+          "frames": 4,
+          "sourceFrames": 6,
           "fps": 10,
           "file": "art/creatures/cave-spider-walk.png",
           "cellPx": 80
@@ -161,6 +167,7 @@
           "anim": "idle",
           "dir": "e",
           "frames": 4,
+          "sourceFrames": 4,
           "fps": 6,
           "file": "art/creatures/duskmoth-idle.png",
           "cellPx": 96
@@ -169,6 +176,7 @@
           "anim": "walk",
           "dir": "e",
           "frames": 6,
+          "sourceFrames": 6,
           "fps": 10,
           "file": "art/creatures/duskmoth-walk.png",
           "cellPx": 96
@@ -355,7 +363,7 @@
   "files": [
     {
       "file": "art/creatures/mycelid-idle.png",
-      "bytes": 1412,
+      "bytes": 1413,
       "width": 384,
       "height": 96
     },
@@ -367,8 +375,8 @@
     },
     {
       "file": "art/creatures/mycelid-walk.png",
-      "bytes": 1699,
-      "width": 576,
+      "bytes": 1456,
+      "width": 384,
       "height": 96
     },
     {
@@ -379,7 +387,7 @@
     },
     {
       "file": "art/creatures/old-wolf-idle.png",
-      "bytes": 2699,
+      "bytes": 2698,
       "width": 512,
       "height": 128
     },
@@ -391,8 +399,8 @@
     },
     {
       "file": "art/creatures/old-wolf-walk.png",
-      "bytes": 2861,
-      "width": 768,
+      "bytes": 2671,
+      "width": 512,
       "height": 128
     },
     {
@@ -403,7 +411,7 @@
     },
     {
       "file": "art/creatures/cave-spider-idle.png",
-      "bytes": 2219,
+      "bytes": 2256,
       "width": 320,
       "height": 80
     },
@@ -415,8 +423,8 @@
     },
     {
       "file": "art/creatures/cave-spider-walk.png",
-      "bytes": 2592,
-      "width": 480,
+      "bytes": 2391,
+      "width": 320,
       "height": 80
     },
     {
@@ -427,7 +435,7 @@
     },
     {
       "file": "art/creatures/duskmoth-idle.png",
-      "bytes": 888,
+      "bytes": 948,
       "width": 384,
       "height": 96
     },
@@ -439,7 +447,7 @@
     },
     {
       "file": "art/creatures/duskmoth-walk.png",
-      "bytes": 1356,
+      "bytes": 1400,
       "width": 576,
       "height": 96
     },
