@@ -47,15 +47,30 @@ fi
 avd="$ANDROID_AVD_HOME/Deepwarren.avd"
 if [[ ! -f "$avd/config.ini" ]]; then
   printf 'no\n' | "$sdk/cmdline-tools/latest/bin/avdmanager" create avd --name Deepwarren --package "$image" --device pixel
-  cat >> "$avd/config.ini" <<'CONFIG'
-hw.lcd.width=960
-hw.lcd.height=540
-hw.lcd.density=160
-hw.ramSize=4096
-hw.keyboard=yes
-showDeviceFrame=no
-CONFIG
 fi
+# avdmanager already wrote every one of these keys for the Pixel profile, so they are replaced
+# rather than appended. Appending left two copies of each key and the device booted at the Pixel
+# portrait default (1080x1920 @ 420) instead of the landscape 1920x1080 @ 240 desktop that the
+# release was verified on. This also repairs a device made by an earlier launcher.
+set_avd_setting() {
+  local key="$1" value="$2" file="$avd/config.ini" tmp
+  tmp="$(mktemp)"
+  awk -v key="$key" -v value="$value" '
+    BEGIN { escaped = key; gsub(/\./, "\\.", escaped); written = 0 }
+    $0 ~ "^[[:space:]]*" escaped "[[:space:]]*=" { if (!written) { print key "=" value; written = 1 }; next }
+    { print }
+    END { if (!written) print key "=" value }
+  ' "$file" > "$tmp"
+  mv "$tmp" "$file"
+}
+set_avd_setting hw.lcd.width 1920
+set_avd_setting hw.lcd.height 1080
+set_avd_setting hw.lcd.density 240
+set_avd_setting hw.initialOrientation landscape
+set_avd_setting skin.dynamic yes
+set_avd_setting hw.ramSize 4096
+set_avd_setting hw.keyboard yes
+set_avd_setting showDeviceFrame no
 adb="$sdk/platform-tools/adb"
 serial=emulator-5580
 if "$adb" devices | grep -q "$serial"; then
@@ -70,6 +85,9 @@ for ((attempt=0; attempt<120; attempt++)); do
 done
 [[ "$ready" == 1 ]] || { echo "Emulator startup timed out. Details: $game_root/emulator.log"; exit 1; }
 "$adb" -s "$serial" emu multidisplay add 1 960 540 160 0
+displays="$("$adb" -s "$serial" shell dumpsys display | tr -d '\r' || true)"
+[[ "$displays" == *com.android.emulator.multidisplay* ]] || { echo 'The second game display did not start, so the menus and battle choices would be unreachable. Close the emulator and run this launcher again.'; exit 1; }
 "$adb" -s "$serial" install -r "$apk"
 "$adb" -s "$serial" shell am start -n com.deepwarren.android/com.deepwarren.android.MainActivity
-echo 'Deepwarren is running. Keep this emulator device for your saved character.'
+echo 'Deepwarren is running in two emulator windows: the large one is the world, and the smaller one below it is the menus and battle choices.'
+echo 'Click a game window once if the keyboard does not respond. Keep this emulator device for your saved character.'

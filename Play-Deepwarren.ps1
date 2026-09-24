@@ -4,6 +4,23 @@ function Checked([string]$Program, [string[]]$Arguments) {
     & $Program @Arguments
     if ($LASTEXITCODE -ne 0) { throw "Command failed: $Program (exit $LASTEXITCODE)" }
 }
+function Set-AvdSetting([string]$Path, [string]$Key, [string]$Value) {
+    $lines = if (Test-Path -LiteralPath $Path) { Get-Content -LiteralPath $Path } else { @() }
+    $pattern = '^\s*' + [regex]::Escape($Key) + '\s*='
+    $result = New-Object System.Collections.Generic.List[string]
+    $written = $false
+    foreach ($line in $lines) {
+        if ($line -match $pattern) {
+            if ($written) { continue }
+            $result.Add("$Key=$Value")
+            $written = $true
+        } else {
+            $result.Add($line)
+        }
+    }
+    if (!$written) { $result.Add("$Key=$Value") }
+    Set-Content -LiteralPath $Path -Value $result -Encoding ascii
+}
 try {
     $releaseBase = 'https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download'
     $release = Invoke-RestMethod "$releaseBase/release.json"
@@ -45,8 +62,20 @@ try {
     if (!(Test-Path -LiteralPath "$avd\config.ini")) {
         'no' | & "$sdk\cmdline-tools\latest\bin\avdmanager.bat" create avd --name Deepwarren --package $image --device pixel
         if ($LASTEXITCODE -ne 0) { throw 'Could not create the Deepwarren emulator.' }
-        Add-Content -LiteralPath "$avd\config.ini" -Value "`nhw.lcd.width=960`nhw.lcd.height=540`nhw.lcd.density=160`nhw.ramSize=4096`nhw.keyboard=yes`nshowDeviceFrame=no"
     }
+    # avdmanager already wrote every one of these keys for the Pixel profile, so they are replaced
+    # rather than appended. Appending left two copies of each key and the device booted at the Pixel
+    # portrait default (1080x1920 @ 420) instead of the landscape 1920x1080 @ 240 desktop that the
+    # release was verified on. This also repairs a device made by an earlier launcher.
+    $config = Join-Path $avd 'config.ini'
+    Set-AvdSetting $config 'hw.lcd.width' '1920'
+    Set-AvdSetting $config 'hw.lcd.height' '1080'
+    Set-AvdSetting $config 'hw.lcd.density' '240'
+    Set-AvdSetting $config 'hw.initialOrientation' 'landscape'
+    Set-AvdSetting $config 'skin.dynamic' 'yes'
+    Set-AvdSetting $config 'hw.ramSize' '4096'
+    Set-AvdSetting $config 'hw.keyboard' 'yes'
+    Set-AvdSetting $config 'showDeviceFrame' 'no'
     $adb = "$sdk\platform-tools\adb.exe"
     $serial = 'emulator-5580'
     $devices = & $adb devices
@@ -54,7 +83,9 @@ try {
         $name = & $adb -s $serial emu avd name
         if ($name -notcontains 'Deepwarren') { throw 'Emulator port 5580 is occupied by another device. Close it and retry.' }
     } else {
-        Start-Process -FilePath "$sdk\emulator\emulator.exe" -ArgumentList '-avd Deepwarren -port 5580 -no-snapshot-load -gpu auto' -WindowStyle Hidden
+        # The emulator is a GUI application, so it has no console window to hide. Asking Windows to
+        # hide it only risks suppressing the two game windows the player needs to see and click.
+        Start-Process -FilePath "$sdk\emulator\emulator.exe" -ArgumentList '-avd Deepwarren -port 5580 -no-snapshot-load -gpu auto'
     }
     $deadline = (Get-Date).AddMinutes(4)
     do {
@@ -63,7 +94,12 @@ try {
         if ((Get-Date) -gt $deadline) { throw 'Emulator startup timed out. Check hardware virtualization and Google emulator requirements.' }
     } until ($booted -match '^1')
     Checked $adb @('-s',$serial,'emu','multidisplay','add','1','960','540','160','0')
+    $displays = & $adb -s $serial shell dumpsys display
+    if ($displays -notmatch 'com.android.emulator.multidisplay') {
+        throw 'The second game display did not start, so the menus and battle choices would be unreachable. Close the emulator window and run this launcher again.'
+    }
     Checked $adb @('-s',$serial,'install','-r',$Apk)
     Checked $adb @('-s',$serial,'shell','am','start','-n','com.deepwarren.android/com.deepwarren.android.MainActivity')
-    Write-Host 'Deepwarren is running. Keep this emulator device for your saved character.'
+    Write-Host 'Deepwarren is running in two emulator windows: the large one is the world, and the smaller one below it is the menus and battle choices.'
+    Write-Host 'Click a game window once if the keyboard does not respond. Keep this emulator device for your saved character.'
 } catch { Write-Host $_ -ForegroundColor Red; exit 1 }
