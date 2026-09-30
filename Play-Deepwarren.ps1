@@ -7,6 +7,9 @@ $ProgressPreference = 'SilentlyContinue'   # the progress bar makes Invoke-WebRe
 $releaseBase = 'https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download'
 $gameRoot = Join-Path $env:LOCALAPPDATA 'Deepwarren'
 $sdk = Join-Path $gameRoot 'sdk'
+# sdkmanager/avdmanager must never discover an unrelated SDK from the caller.
+$env:ANDROID_HOME = $sdk
+$env:ANDROID_SDK_ROOT = $sdk
 $env:ANDROID_AVD_HOME = Join-Path $gameRoot 'avd'
 if (!$Apk) { $Apk = Join-Path $gameRoot 'Deepwarren.apk' }
 # Pinned downloads, each checked against its published SHA-256 before use.
@@ -46,6 +49,8 @@ function Set-AvdSetting([string]$Path, [string]$Key, [string]$Value) {
 }
 
 try {
+    $hostArch = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
+    if ($hostArch -ne 'AMD64') { throw 'This setup requires 64-bit Intel/AMD Windows. Windows on ARM is not supported.' }
     Write-Host 'Deepwarren setup' -ForegroundColor Green
     Write-Host 'The first run downloads about 3 GB and can take 15-30 minutes. Later runs start in a minute or two.'
     New-Item -ItemType Directory -Force -Path $gameRoot, $sdk, $env:ANDROID_AVD_HOME | Out-Null
@@ -58,6 +63,9 @@ try {
     Step '[1/6] Getting the latest Deepwarren'
     $release = Invoke-RestMethod "$releaseBase/release.json"
     if ($release.apkSha256 -notmatch '^[a-f0-9]{64}$') { throw 'The release information is invalid. Try again later.' }
+    if ($PSBoundParameters.ContainsKey('Apk') -and (!(Test-Path -LiteralPath $Apk) -or (Get-FileHash -LiteralPath $Apk -Algorithm SHA256).Hash -ne $release.apkSha256)) {
+        throw 'The supplied APK does not match the current public release. It has not been modified.'
+    }
     if (!(Test-Path -LiteralPath $Apk) -or (Get-FileHash -LiteralPath $Apk -Algorithm SHA256).Hash -ne $release.apkSha256) {
         Download "$releaseBase/Deepwarren.apk" $Apk $release.apkSha256
         Write-Host 'Downloaded the newest game.'
@@ -77,6 +85,7 @@ try {
             Remove-Item -LiteralPath $zip -Force
             $found = Get-ChildItem -LiteralPath $ownJava -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'bin\java.exe') } | Select-Object -First 1
         }
+        if (!$found) { throw 'The Java archive did not contain a usable runtime. Setup stopped before installing Android tools.' }
         $env:JAVA_HOME = $found.FullName
         Write-Host 'Java is ready.'
     }
@@ -137,14 +146,15 @@ try {
         if ($name -notcontains 'Deepwarren') { throw 'Another emulator is using port 5580. Close it and run Play Deepwarren again.' }
         Write-Host 'The emulator is already running.'
     } else {
-        Start-Process -FilePath "$sdk\emulator\emulator.exe" -ArgumentList '-avd Deepwarren -port 5580 -no-snapshot-load -gpu auto'
+        Start-Process -WindowStyle Normal -FilePath "$sdk\emulator\emulator.exe" -ArgumentList '-avd Deepwarren -port 5580 -no-snapshot-load -gpu auto'
         Write-Host 'Waiting for Android to start (the first start can take several minutes)' -NoNewline
     }
     $deadline = (Get-Date).AddMinutes(10)
     do {
         Start-Sleep -Seconds 3
         Write-Host '.' -NoNewline
-        $booted = & $adb -s $serial shell getprop sys.boot_completed 2>$null
+        # Android is often offline during boot; native stderr must not abort Windows PowerShell 5.1.
+        $booted = cmd /c "`"$adb`" -s $serial shell getprop sys.boot_completed 2>nul"
         if ((Get-Date) -gt $deadline) { throw 'Android did not finish starting within 10 minutes. Close the emulator window and run Play Deepwarren again.' }
     } until ($booted -match '^1')
     Write-Host ''
@@ -177,10 +187,10 @@ try {
     Write-Host ''
     Write-Host 'Deepwarren is running.' -ForegroundColor Green
     Write-Host '  - The large window is the world. The smaller window is menus, inventory and battle choices.'
-    Write-Host '  - Move with WASD or the arrow keys. E or Enter selects. Esc goes back. F2 shows all controls.'
+    Write-Host '  - Move with WASD or the arrow keys. E or Enter selects. Esc goes back. F1 opens help.'
     Write-Host '  - Click a game window once if the keyboard does not respond.'
     Write-Host '  - Next time, open Deepwarren from the Start menu. It updates the game automatically.'
-    Write-Host '  - Keep the Deepwarren emulator: your character lives in it.'
+    Write-Host '  - Keep the Deepwarren emulator: it holds the identity used to reach your server character.'
 } catch {
     Write-Host ''
     Write-Host $_ -ForegroundColor Red
