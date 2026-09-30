@@ -13,7 +13,7 @@ the game tells you so instead of leaving you in the queue.
 
 ## Gameplay video
 
-[Watch the 107-second demo](https://phippsrtyler.github.io/deepwarren-demo/#video) ([MP4](https://phippsrtyler.github.io/deepwarren-demo/art/video/deepwarren-demo.mp4)): creation, the walk out of Gillhearth, a cave spider, a hare fight with aimed strikes, harvesting the leg and bonding it at camp, both screens side by side with the game's music, recorded from the shipped Android build on the public server.
+[Watch the 112-second demo](https://phippsrtyler.github.io/deepwarren-demo/#video) ([MP4](https://phippsrtyler.github.io/deepwarren-demo/art/video/deepwarren-demo.mp4)): creation, the walk out of Gillhearth, a cave spider, a hare fight with aimed strikes, harvesting the leg and bonding it at camp, both screens side by side with the game's music, recorded from the shipped Android build on the public server.
 
 ![Aimed strikes](https://phippsrtyler.github.io/deepwarren-demo/art/gifs/v22-limb-strike.gif)
 
