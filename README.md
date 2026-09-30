@@ -17,13 +17,17 @@ the game tells you so instead of leaving you in the queue.
 3. Open Deepwarren and play.
 
 To update, install the new APK over the old one. Your character is kept. Uninstalling the app
-or clearing its storage loses your character.
+or clearing its storage loses the installation identity used to reach your server character.
 
-## Windows
+## Windows (experimental)
+
+Requires 64-bit Intel/AMD Windows; Windows on ARM is not supported by this setup.
+A fresh-machine installation has not yet been fully verified. The launcher is unsigned and
+respects Windows script policy: if Windows blocks it, stop and report the message. Do not
+disable security, change script policy, or remove download protection to run it.
 
 1. Download **Windows setup** and open the ZIP. Click **Extract all**.
 2. In the extracted folder, double-click **Play Deepwarren**.
-   - If Windows shows "Windows protected your PC", click **More info**, then **Run anyway**.
 3. When Google's licence terms appear, read each one and type **y** then Enter.
 4. Wait. The first run downloads about 3 GB and takes 15-30 minutes. The window shows each step.
 
@@ -35,21 +39,23 @@ If it says **hardware virtualization is off**: press Start, type *Turn Windows f
 tick **Windows Hypervisor Platform**, click OK and restart your PC. Then run Deepwarren again.
 Some PCs also need virtualization (Intel VT-x or AMD SVM) switched on in the BIOS.
 
-## Mac
+## Mac (experimental)
 
 1. Download **Mac setup** and double-click the ZIP to unpack it.
-2. Right-click **Play-Deepwarren** and choose **Open**, then **Open** again. (macOS asks this once
-   because the file came from the internet.)
+2. Open **Play-Deepwarren**. If macOS blocks the launcher or reports that it cannot verify it,
+   stop and report the message. Do not disable Gatekeeper or remove quarantine protection.
 3. When Google's licence terms appear, read each one and type **y** then Return.
 4. Wait. The first run downloads about 3 GB and takes 15-30 minutes.
 
-Next time, double-click **Play-Deepwarren** again. It works on Apple Silicon and Intel Macs.
-The Mac setup has not yet been tested on a physical Mac, so please report anything that goes wrong.
+Next time, double-click **Play-Deepwarren** again. The setup selects an image for Apple Silicon
+or Intel, but neither branch has been tested on a physical Mac. Mocked installer checks do
+not establish macOS installation, display, performance or input compatibility.
 
 ## What the setup does
 
 It downloads a small Java runtime, Google's official Android emulator tools and an Android system image.
-Every download is checked against a known checksum. It creates a dedicated "Deepwarren" emulator,
+The launcher checks the game, Java runtime and command-line tools against pinned checksums.
+Google's SDK manager installs the emulator and Android image. It creates a dedicated "Deepwarren" emulator,
 installs the newest game and starts it. Everything lives in its own folder, so it never touches
 another Android setup you may have:
 
@@ -60,18 +66,25 @@ It changes no system settings. Android Studio is not needed. If you already have
 uses Android Studio's Java instead of downloading its own. You need about 8 GB of free disk space
 and 8 GB of RAM.
 
-Your character lives in the Deepwarren emulator. Keep it. To remove everything, delete the folder above.
+Keep the Deepwarren emulator: it retains the installation identity used to reach your character
+in the hosted world. Updates install over the existing app and retain that identity. Deleting
+the folder above or clearing app storage loses it.
+
+If an older setup opens a portrait device, close the emulator completely and run the updated
+launcher again. Display settings are repaired on disk and take effect on the next start.
 
 ## Controls
+
+These basic controls apply to the current public release. Follow the choices shown in-game
+for the current menu or battle.
 
 | Key | Action |
 |---|---|
 | WASD / arrow keys | Move and navigate menus |
 | E or Enter | Select, interact |
 | Esc | Back, pause |
-| 1 | Aim at a limb in battle |
+| 1 | Open limb targeting in battle |
 | F1 | Help |
-| F2 | Full controls on the lower screen |
 
 Click a game window once if the keyboard doesn't respond. You can also click choices in the smaller window.
 
