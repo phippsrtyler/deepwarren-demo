@@ -10,6 +10,13 @@ No account, no GPU and no server setup: the game connects to our hosted world by
 The world runs on the developer's own PC, so the demo is online when that PC is. If it's offline,
 the game tells you so instead of leaving you in the queue.
 
+
+## Gameplay video
+
+[Watch the 96-second demo](https://phippsrtyler.github.io/deepwarren-demo/#video) ([MP4](https://phippsrtyler.github.io/deepwarren-demo/art/video/deepwarren-demo.mp4)): creation, the walk out of Gillhearth, a hare fight with aimed strikes, harvesting the remains and bonding the leg at camp, recorded from the shipped Android build on the public server.
+
+![Aimed strikes](https://phippsrtyler.github.io/deepwarren-demo/art/gifs/v22-limb-strike.gif)
+
 ## Android phone or tablet (AYN Thor, etc.)
 
 1. Tap **Download for Android** above.
