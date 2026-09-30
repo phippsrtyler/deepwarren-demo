@@ -1,27 +1,31 @@
 #!/bin/bash
 # Deepwarren for Mac: sets up Google's Android emulator and starts the game in it.
-# Double-click this file (the first time: right-click it, choose Open, then Open).
+# Open this file under normal macOS policy. Stop if macOS blocks or cannot verify it.
 set -euo pipefail
 
 release_base='https://github.com/phippsrtyler/deepwarren-demo/releases/latest/download'
 game_root="$HOME/Library/Application Support/Deepwarren"
 sdk="$game_root/sdk"
+export ANDROID_HOME="$sdk" ANDROID_SDK_ROOT="$sdk"
 export ANDROID_AVD_HOME="$game_root/avd"
 apk="$game_root/Deepwarren.apk"
 serial=emulator-5580
 tools_build=15859902
 
 step() { printf '\n\033[36m%s\033[0m\n' "$1"; }
-fail() { printf '\n\033[31m%s\033[0m\n' "$1"; printf '\nPress Return to close this window.'; read -r _; exit 1; }
+fail() { printf '\n\033[31m%s\033[0m\n' "$1"; printf '\nPress Return to close this window.'; read -r _ || true; exit 1; }
 trap 'fail "Setup stopped unexpectedly. Double-click Play-Deepwarren again to retry; nothing you downloaded is lost."' ERR
-fetch() { curl --fail --location --proto '=https' --tlsv1.2 --silent --show-error "$1" -o "$2"; }
+fetch() { curl --fail --location --proto '=https' --proto-redir '=https' --tlsv1.2 --silent --show-error "$1" -o "$2"; }
 verified_download() {
   fetch "$1" "$2.part"
   [[ "$(shasum -a 256 "$2.part" | cut -d ' ' -f 1)" == "$3" ]] || { rm -f "$2.part"; fail "The download from $1 was damaged or changed (checksum mismatch). Run the setup again."; }
   mv -f "$2.part" "$2"
 }
 
-case "$(uname -m)" in
+# A Terminal running under Rosetta must still install the native Apple Silicon image.
+host_arch="$(uname -m)"
+if [[ "$host_arch" == x86_64 && "$(sysctl -in sysctl.proc_translated 2>/dev/null || true)" == 1 ]]; then host_arch=arm64; fi
+case "$host_arch" in
   arm64)
     arch=arm64-v8a; tools=mac_arm64; tools_sha=835b62a26162b229b441d1f6d4680383815a270809eb33522c0d480fa5002c4e
     java_url='https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz'
@@ -53,13 +57,14 @@ step '[2/6] Java runtime'
 studio_java='/Applications/Android Studio.app/Contents/jbr/Contents/Home'
 if [[ -x "$studio_java/bin/java" ]]; then export JAVA_HOME="$studio_java"; echo 'Using the Java that came with Android Studio.'
 else
-  own_java="$(find "$game_root/java" -maxdepth 4 -path '*/Contents/Home/bin/java' 2>/dev/null | head -n 1 || true)"
+  own_java="$(find "$game_root/java" -path '*/Contents/Home/bin/java' 2>/dev/null | head -n 1 || true)"
   if [[ -z "$own_java" ]]; then
     echo 'Downloading a small Java runtime (Eclipse Temurin, about 50 MB)...'
     verified_download "$java_url" "$game_root/java.tar.gz" "$java_sha"
     mkdir -p "$game_root/java"; tar -xzf "$game_root/java.tar.gz" -C "$game_root/java"; rm -f "$game_root/java.tar.gz"
-    own_java="$(find "$game_root/java" -maxdepth 4 -path '*/Contents/Home/bin/java' | head -n 1)"
+    own_java="$(find "$game_root/java" -path '*/Contents/Home/bin/java' | head -n 1)"
   fi
+  [[ -n "$own_java" && -x "$own_java" ]] || fail "The Java archive did not contain a usable runtime. Setup stopped before installing Android tools."
   export JAVA_HOME="${own_java%/bin/java}"; echo 'Java is ready.'
 fi
 
@@ -141,8 +146,8 @@ displays="$("$adb" -s "$serial" shell dumpsys display | tr -d '\r' || true)"
 trap - ERR
 printf '\n\033[32mDeepwarren is running.\033[0m\n'
 echo '  - The large window is the world. The smaller window is menus, inventory and battle choices.'
-echo '  - Move with WASD or the arrow keys. E or Return selects. Esc goes back. F2 shows all controls.'
+echo '  - Move with WASD or the arrow keys. E or Return selects. Esc goes back. F1 opens help.'
 echo '  - Click a game window once if the keyboard does not respond.'
 echo '  - Next time, double-click Play-Deepwarren again. It updates the game automatically.'
-echo '  - Keep the Deepwarren emulator: your character lives in it.'
+echo '  - Keep the Deepwarren emulator: it holds the identity used to reach your server character.'
 printf '\nYou can close this window. The game keeps running.\n'
